@@ -23,12 +23,24 @@
 import exputil
 import networkload
 import random
+import sys
 
 local_shell = exputil.LocalShell()
 
 local_shell.remove_force_recursive("runs")
 local_shell.remove_force_recursive("pdf")
 local_shell.remove_force_recursive("data")
+
+# Schedule
+#to get back to old code , put following lines at "schedule was here !!"
+random.seed(123456789)
+random.randint(0, 100000000)  # Legacy reasons
+seed_from_to = random.randint(0, 100000000)
+a = set(range(1156, 1256))
+list_from_to = networkload.generate_from_to_reciprocated_random_pairing(list(a), seed_from_to)
+list_proportion=[random.choice(range(70,130))/100 for _ in range(len(list_from_to))]
+tcp_list_flow_size_byte=[1000000000000 * elt for elt in list_proportion]#tcp : send a fixed size quantity
+udp_list_flow_size_proportion=list_proportion#udp : rate relative to the rate given by config below. initially was always 1.
 
 for config in [
     # Rate in Mbit/s, duration in seconds, ISL network device queue size pkt for TCP, GSL network device queue size pkt for TCP
@@ -98,20 +110,14 @@ for config in [
         # .gitignore (legacy reasons)
         local_shell.write_file(run_dir + "/.gitignore", "logs_ns3")
 
-        # Schedule
-        random.seed(123456789)
-        random.randint(0, 100000000)  # Legacy reasons
-        seed_from_to = random.randint(0, 100000000)
-        a = set(range(1156, 1256))
-        list_from_to = networkload.generate_from_to_reciprocated_random_pairing(list(a), seed_from_to)
-
+        #schedule was here !!
         # tcp_flow_schedule.csv
         if protocol_chosen == "tcp":
             networkload.write_schedule(
                 run_dir + "/tcp_flow_schedule.csv",
                 len(list_from_to),
                 list_from_to,
-                [1000000000000] * len(list_from_to),
+                tcp_list_flow_size_byte,
                 [0] * len(list_from_to)
             )
 
@@ -124,8 +130,19 @@ for config in [
                             i,
                             list_from_to[i][0],
                             list_from_to[i][1],
-                            data_rate_megabit_per_s,
+                            data_rate_megabit_per_s*udp_list_flow_size_proportion[i],
                             0,
                             1000000000000
                         )
                     )
+
+if len(sys.argv) > 1:
+    #write the commodity list in an accessible place for path generation
+    local_shell.write_file("../../../satellite_network_state/commodites.temp", list(zip(list_from_to,list_proportion)))
+
+    #generate network graph
+    local_shell.perfect_exec(
+        "cd ../../../satellite_network_state; "
+        "./generate_all_local.sh",
+        output_redirect=exputil.OutputRedirect.CONSOLE
+    )
