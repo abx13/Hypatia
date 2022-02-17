@@ -64,9 +64,9 @@ def worker(args):
         max_isl_length_m,
         dynamic_state_algorithm,  # Options:
                                   # "algorithm_free_one_only_gs_relays"
-                                  # "algorithm_free_one_only_over_isls"
-                                  # "algorithm_free_gs_one_sat_many_only_over_isls"
-                                  # "algorithm_paired_many_only_over_isls"
+                                  # "algorithm_free_one_only_over_isls[2]"
+                                  # "algorithm_free_gs_one_sat_many_only_over_isls[2]"
+                                  # "algorithm_paired_many_only_over_isls[2]"
         print_logs
     )
 

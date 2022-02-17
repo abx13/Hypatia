@@ -31,7 +31,7 @@ id="$1"
 num_threads=$2
 
 # Check validity of arguments
-if [ "${id}" -lt "0" ] || [ "${id}" -gt "14" ]; then
+if [ "${id}" -lt "0" ] || [ "${id}" -gt "15" ]; then
   echo "Invalid workload id: ${id}"
   exit 1
 fi
@@ -97,4 +97,9 @@ if [ "${id}" = "13" ]; then
 fi
 if [ "${id}" = "14" ]; then
   python main_25x25.py 200 1000 algorithm_free_one_only_over_isls ${num_threads}
+fi
+
+# Kuiper-630 with ISLs
+if [ "${id}" = "15" ]; then
+  python main_kuiper_630.py 200 50 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 ${num_threads}
 fi
