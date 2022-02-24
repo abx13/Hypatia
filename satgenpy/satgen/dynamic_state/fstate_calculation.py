@@ -1,7 +1,6 @@
 import math
 import networkx as nx
-import Dynamic_mcnf_paper_code.convert_nx_graph
-import Dynamic_mcnf_paper_code.mcnf_dynamic
+from ..Dynamic_mcnf_paper_code.interface import calcul_paths
 
 def calculate_fstate_shortest_path_without_gs_relaying(
         output_dynamic_state_dir,
@@ -169,12 +168,13 @@ def calculate_fstate_shortest_path_without_gs_relaying2(
     #get the commodity list
     with open("commodites.temp","r") as fcomm:
         commodity_list=eval(fcomm.read())
+        if enable_verbose_logs:
+            print('lecture commodites') 
 
     # Calculate shortest path distances
     if enable_verbose_logs:
         print("  > Calculating mcnf for graph without ground-station relays")
     # (Note: Numpy has a deprecation warning here because of how networkx uses matrices)
-    dist_sat_net_without_gs = nx.floyd_warshall_numpy(sat_net_graph_only_satellites_with_isls)
     total_net_graph=sat_net_graph_only_satellites_with_isls.copy()
     #add ground stations to graph
     total_net_graph.add_nodes_from([num_satellites + dst_gid for dst_gid in range(num_ground_stations)])
@@ -186,17 +186,10 @@ def calculate_fstate_shortest_path_without_gs_relaying2(
     # /!\ 
     for groundStationId in range(num_ground_stations):
         for distanceSatGS,satid in ground_station_satellites_in_range_candidates[groundStationId]:
-            total_net_graph.add_edge(satid, num_satellites+groundStationId, weight = distanceSatGS)
+            total_net_graph.add_edge(satid, num_satellites+groundStationId, weight = 10000000)#distanceSatGS
     
-    total_net_graph_differentformat=Dynamic_mcnf_paper_code.convert_nx_graph.nx2graph(total_net_graph)
-    if not prev_fstate:
-        #shortest path
-        #TODO : use algorithm ensuring minimal flow
-        initial_list_path = [nx.shortest_path(total_net_graph_differentformat, src, dst) for (src,dst,_) in commodity_list]#Dynamic_mcnf_paper_code.convert_nx_graph.fstate2sol(prev_fstate, commodity_list)
-    else:
-        initial_list_path = Dynamic_mcnf_paper_code.convert_nx_graph.fstate2sol(prev_fstate, commodity_list)
-    list_paths = Dynamic_mcnf_paper_code.mcnf_dynamic.SRR_arc_node_one_timestep(total_net_graph_differentformat, commodity_list, initial_list_path)
-    
+    #compute optimal path
+    list_paths = calcul_paths(total_net_graph, prev_fstate, commodity_list)
     # Forwarding state
     fstate = {}
 

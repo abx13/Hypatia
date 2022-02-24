@@ -46,22 +46,22 @@ for config in [
     # Rate in Mbit/s, duration in seconds, ISL network device queue size pkt for TCP, GSL network device queue size pkt for TCP
     # (UDP queue size is capped at 100)
     (1.0, 10, 10, 10),
-    (1.0, 20, 10, 10),
-    (1.0, 50, 10, 10),
-    (10.0, 10, 100, 100),
-    (10.0, 20, 100, 100),
-    (10.0, 50, 100, 100),
-    (25.0, 10, 250, 250),
-    (25.0, 20, 250, 250),
-    (25.0, 50, 250, 250),
-    (100.0, 10, 1000, 1000),
-    (100.0, 20, 1000, 1000),
-    (250.0, 10, 2500, 2500),
-    (250.0, 20, 2500, 2500),
-    (1000.0, 10, 10000, 10000),
-    (2500.0, 10, 25000, 25000),
-    (10000.0, 1, 100000, 100000),
-    (10000.0, 2, 100000, 100000),
+    #(1.0, 20, 10, 10),
+    #(1.0, 50, 10, 10),
+    #(10.0, 10, 100, 100),
+    #(10.0, 20, 100, 100),
+    #(10.0, 50, 100, 100),
+    #(25.0, 10, 250, 250),
+    #(25.0, 20, 250, 250),
+    #(25.0, 50, 250, 250),
+    #(100.0, 10, 1000, 1000),
+    #(100.0, 20, 1000, 1000),
+    #(250.0, 10, 2500, 2500),
+    #(250.0, 20, 2500, 2500),
+    #(1000.0, 10, 10000, 10000),
+    #(2500.0, 10, 25000, 25000),
+    #(10000.0, 1, 100000, 100000),
+    #(10000.0, 2, 100000, 100000),
 ]:
 
     # Retrieve values from the config
@@ -135,14 +135,15 @@ for config in [
                             1000000000000
                         )
                     )
-
-if len(sys.argv) > 1:
+import time
+if len(sys.argv) > 0:
     #write the commodity list in an accessible place for path generation
-    local_shell.write_file("../../../satellite_network_state/commodites.temp", list(zip(list_from_to,list_proportion)))
-
+    local_shell.write_file("../../satellite_networks_state/commodites.temp", list(zip(list_from_to,list_proportion)))
+    #print("infos",a:=list(zip(list_from_to,list_proportion)))
+    
     #generate network graph
     local_shell.perfect_exec(
-        "cd ../../../satellite_network_state; "
-        "./generate_for_paper.sh 15 4",
+        "cd ../../satellite_networks_state; "
+        "./generate_for_paper.sh 15 20",
         output_redirect=exputil.OutputRedirect.CONSOLE
     )

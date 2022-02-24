@@ -22,26 +22,30 @@
 
 ### SATELLITE NETWORKS STATE
 
-cd satellite_networks_state || exit 1
-bash generate_all_local.sh || exit 1
-cd .. || exit 1
+# fait dans generate_runs2 de NS-3 experiments
 
-### SATGENPY ANALYSIS
 
-# Satgenpy analysis
-cd satgenpy_analysis || exit 1
-python perform_full_analysis.py || exit 1
-cd .. || exit 1
 
 ### NS-3 EXPERIMENTS
 
 cd ns3_experiments || exit 1
-
-
 # ns-3: Traffic matrix load
 cd traffic_matrix_load || exit 1
 python step_1_generate_runs2.py || exit 1
-python step_2_run.py || exit 1
+cd ../.. || exit 1
+
+#intermède
+### SATGENPY ANALYSIS
+# Satgenpy analysis
+ls
+cd satgenpy_analysis || exit 1
+python perform_full_analysis.py || exit 1
+cd .. || exit 1
+
+# reprise NS-3 EXPERIMENTS
+cd ns3_experiments || exit 1
+cd traffic_matrix_load || exit 1
+python step_2_run.py 0 || exit 1
 python step_3_generate_plots.py || exit 1
 cd ..
 
