@@ -1,3 +1,6 @@
 [submodule "ns3-sat-sim/simulator/contrib/basic-sim"]
 	path = ns3-sat-sim/simulator/contrib/basic-sim
 	url = https://github.com/snkas/basic-sim
+[submodule "satgenpy/satgen/Dynamic_mcnf_paper_code"]
+	path = satgenpy/satgen/Dynamic_mcnf_paper_code
+	url = https://github.com/kalelpida/Dynamic_mcnf_paper_code
