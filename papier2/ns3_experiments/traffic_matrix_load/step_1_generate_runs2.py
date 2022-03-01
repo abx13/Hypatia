@@ -69,7 +69,7 @@ for config in [
     duration_s = config[1]
 
     # Both protocols
-    for protocol_chosen in ["tcp", "udp"]:
+    for protocol_chosen in ["udp"]:#["tcp", "udp"]:
 
         # TCP NewReno needs at least the BDP in queue size to fulfill bandwidth
         if protocol_chosen == "tcp":
@@ -138,7 +138,7 @@ for config in [
 import time
 if len(sys.argv) > 0:
     #write the commodity list in an accessible place for path generation
-    local_shell.write_file("../../satellite_networks_state/commodites.temp", list(zip(list_from_to,list_proportion)))
+    local_shell.write_file("../../satellite_networks_state/commodites.temp", list(zip([elt[0] for elt in list_from_to],[elt[1] for elt in list_from_to],list_proportion)))
     #print("infos",a:=list(zip(list_from_to,list_proportion)))
     
     #generate network graph

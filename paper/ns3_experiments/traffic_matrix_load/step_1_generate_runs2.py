@@ -138,7 +138,7 @@ for config in [
 
 if len(sys.argv) > 1:
     #write the commodity list in an accessible place for path generation
-    local_shell.write_file("../../../satellite_network_state/commodites.temp", list(zip(list_from_to,list_proportion)))
+    local_shell.write_file("../../../satellite_network_state/commodites.temp", list(zip([elt[0] for elt in list_from_to],[elt[1] for elt in list_from_to],list_proportion)))
 
     #generate network graph
     local_shell.perfect_exec(

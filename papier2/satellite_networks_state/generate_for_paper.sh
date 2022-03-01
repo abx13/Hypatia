@@ -101,5 +101,5 @@ fi
 
 # Kuiper-630 with ISLs
 if [ "${id}" = "15" ]; then
-  python main_kuiper_630.py 200 50 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 ${num_threads}
+  python main_kuiper_630.py 20 50 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 ${num_threads}
 fi
