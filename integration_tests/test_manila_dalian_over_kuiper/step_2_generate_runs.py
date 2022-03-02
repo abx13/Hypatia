@@ -78,6 +78,11 @@ for run in get_tcp_run_list():
     local_shell.sed_replace_in_file_plain(run_dir + "/schedule.csv", "[FROM]", str(run["from_id"]))
     local_shell.sed_replace_in_file_plain(run_dir + "/schedule.csv", "[TO]", str(run["to_id"]))
 
+#write the commodity list in an accessible place for path generation
+local_shell.write_file("../commodites.temp", str([[run["from_id"], run["to_id"], 1000000]]))
+#print("infos",a:=list(zip(list_from_to,list_proportion)))
+
+
 
 # Print finish
 print("Success: generated ns-3 runs")

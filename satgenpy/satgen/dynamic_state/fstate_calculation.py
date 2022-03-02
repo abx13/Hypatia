@@ -166,7 +166,8 @@ def calculate_fstate_shortest_path_without_gs_relaying2(
         enable_verbose_logs
 ):
     #get the commodity list
-    with open("commodites.temp","r") as fcomm:
+    
+    with open("/mnt/d/Dossier personnel/hypatia/integration_tests/commodites.temp","r") as fcomm:
         commodity_list=eval(fcomm.read())
         if enable_verbose_logs:
             print('lecture commodites') 

@@ -82,8 +82,8 @@ local_shell.make_full_dir("temp/gen_data")
 
 # Both dynamic state algorithms should yield the same path and RTT
 for dynamic_state_algorithm in [
-    "algorithm_free_one_only_over_isls",
-    "algorithm_free_gs_one_sat_many_only_over_isls"
+    "algorithm_free_one_only_over_isls2",
+    "algorithm_free_gs_one_sat_many_only_over_isls2"
 ]:
 
     # Specific outcomes
@@ -257,10 +257,10 @@ for dynamic_state_algorithm in [
     )
 
     # GSL interfaces
-    if dynamic_state_algorithm == "algorithm_free_one_only_over_isls":
+    if dynamic_state_algorithm == "algorithm_free_one_only_over_isls2":
         gsl_interfaces_per_satellite = 1
         gsl_satellite_max_agg_bandwidth = 1.0
-    elif dynamic_state_algorithm == "algorithm_free_gs_one_sat_many_only_over_isls":
+    elif dynamic_state_algorithm == "algorithm_free_gs_one_sat_many_only_over_isls2":
         gsl_interfaces_per_satellite = len(ground_stations)
         gsl_satellite_max_agg_bandwidth = len(ground_stations)
     else:
