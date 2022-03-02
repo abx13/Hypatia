@@ -31,7 +31,7 @@ id="$1"
 num_threads=$2
 
 # Check validity of arguments
-if [ "${id}" -lt "0" ] || [ "${id}" -gt "16" ]; then
+if [ "${id}" -lt "0" ] || [ "${id}" -gt "17" ]; then
   echo "Invalid workload id: ${id}"
   exit 1
 fi
