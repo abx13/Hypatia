@@ -138,9 +138,7 @@ def help_dynamic_state(
         current += num_time_steps
 
     # Run in parallel
-    #pool = ThreadPool(num_threads)
-    #pool.map(worker, list_args)
-    #pool.close()
-    #pool.join()
-    for args in list_args:
-    	worker(args)
+    pool = ThreadPool(num_threads)
+    pool.map(worker, list_args)
+    pool.close()
+    pool.join()
