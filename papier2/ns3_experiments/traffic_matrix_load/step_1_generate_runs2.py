@@ -24,7 +24,6 @@ import exputil
 import networkload
 import random
 import sys
-
 local_shell = exputil.LocalShell()
 
 local_shell.remove_force_recursive("runs")
@@ -36,11 +35,25 @@ local_shell.remove_force_recursive("data")
 random.seed(123456789)
 random.randint(0, 100000000)  # Legacy reasons
 seed_from_to = random.randint(0, 100000000)
-a = set(range(1156, 1256))
+print(params:=sys.argv[1:])
+if not len(params):
+	params = ["16", "4"]#kuiper_630
+	a = set(range(1156, 1256))
+elif "kuiper_630" in params[0] and "100" in params[4]:
+	a = set(range(1156, 1256))
+elif "telesat_1015" in params[0] and "100" in params[4]:
+	a = set(range(351,451))
+else:
+	print("erreur parametres non reconnus, editer ce fichier et generate_for_paper")
+	exit(1)
 list_from_to = networkload.generate_from_to_reciprocated_random_pairing(list(a), seed_from_to)
-list_proportion=[random.choice(range(70,130))/100 for _ in range(len(list_from_to))]
+#list_from_to = list_from_to[0:max(10,len(list_from_to))]
+
+reference_rate = 20000 # rate in b/s
+list_proportion  =[random.choice(range(70,130))/100 for _ in range(len(list_from_to))]
 tcp_list_flow_size_byte=[1000000000000 * elt for elt in list_proportion]#tcp : send a fixed size quantity
-udp_list_flow_size_proportion=list_proportion#udp : rate relative to the rate given by config below. initially was always 1.
+udp_list_flow_size_proportion=[elt*reference_rate for elt in list_proportion]#udp : rate relative to the rate given by config below. initially was always 1.
+
 
 for config in [
     # Rate in Mbit/s, duration in seconds, ISL network device queue size pkt for TCP, GSL network device queue size pkt for TCP
@@ -136,14 +149,16 @@ for config in [
                         )
                     )
 import time
-if len(sys.argv) > 0:
-    #write the commodity list in an accessible place for path generation
-    local_shell.write_file("../../satellite_networks_state/commodites.temp", list(zip([elt[0] for elt in list_from_to],[elt[1] for elt in list_from_to],list_proportion)))
-    #print("infos",a:=list(zip(list_from_to,list_proportion)))
-    
-    #generate network graph
-    local_shell.perfect_exec(
-        "cd ../../satellite_networks_state; "
-        "./generate_for_paper.sh 15 20",
-        output_redirect=exputil.OutputRedirect.CONSOLE
-    )
+if len(params) > 0:
+	#write the commodity list in an accessible place for path generation
+	local_shell.write_file("../../satellite_networks_state/commodites.temp", list(zip([elt[0] for elt in list_from_to],[elt[1] for elt in list_from_to],list_proportion)))
+	#print("infos",a:=list(zip(list_from_to,list_proportion)))
+	print(' '.join(params))
+	#generate network graph
+	
+	local_shell.perfect_exec(
+		"cd ../../satellite_networks_state; "
+		"./generate_for_paper.sh " + ' '.join(params),
+		output_redirect=exputil.OutputRedirect.CONSOLE
+	)
+	

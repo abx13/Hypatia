@@ -21,8 +21,14 @@
 # SOFTWARE.
 
 # Usage help
-if [ "$1" == "--help" ] || [ "$#" != "2" ]; then
+if [ "$1" -eq "--help" ] || ([ "$#" -ne "2" ] && [ "$#" -ne "7" ]); then
   echo "Usage: bash generate_for_paper.sh [id: 0 - 14] [number of threads]"
+  echo "Other Usage: bash generate_for_paper.sh [main_constellation_shell.py] [simulation duration] [time step] [isls_?] [ground_stations] [algorithm] [number of threads]"
+  exit 0
+fi
+
+if [ "$#" -eq "7" ]; then
+  python $1 $2 $3 $4 $5 $6 $7
   exit 0
 fi
 
@@ -102,12 +108,12 @@ fi
 #### ALGO FRANCOIS : multi commodities network flow ####
 # Kuiper-630 with ISLs
 if [ "${id}" = "15" ]; then
-  python main_kuiper_630.py 20 50 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 ${num_threads}
+  python main_kuiper_630.py 20 5000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 ${num_threads}
 fi
 
 
 if [ "${id}" = "16" ]; then
-  python main_telesat_1015.py 200 100 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 ${num_threads}
+  python main_telesat_1015.py 20 5000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 ${num_threads}
 fi
 
 if [ "${id}" = "17" ]; then

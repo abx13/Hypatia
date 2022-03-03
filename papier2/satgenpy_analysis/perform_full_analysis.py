@@ -171,6 +171,15 @@ for satgenpy_generated_constellation in [
                 duration_s
             )
         )
+commands_to_run = []
+# Paris to Moscow with only ground-station relays (added a grid to support this) on Telesat
+commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
+                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
+                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
+                       "5000 20 409 445 "
+                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_kuiper_isls_409_to_445.log 2>&1")
+
+
 
 # Run the commands
 print("Running commands (at most %d in parallel)..." % max_num_processes)
