@@ -28,7 +28,7 @@ local_shell = exputil.LocalShell()
 local_shell.perfect_exec("rm -rf runs/*/logs_ns3")
 
 # Get workload identifier from argument
-num_machines = 4
+num_machines = 1
 args = sys.argv[1:]
 if len(args) != 1 or int(args[0]) < 0 or int(args[0]) >= num_machines:
     raise ValueError("Need to have have first argument in range [0, %d) to pick workload" % num_machines)
@@ -39,10 +39,10 @@ unique_id = 0
 for config in [
     # Rate in Mbit/s, duration in seconds
     # (1.0, 10, 10, 10),
-    # (1.0, 20, 10, 10),
+    (1.0, 20, 10, 10),
     # (1.0, 50, 10, 10),
     # (10.0, 10, 100, 100),
-    (10.0, 20, 100, 100),
+    # (10.0, 20, 100, 100),
     # (10.0, 50, 100, 100),
     # (25.0, 10, 250, 250),
     # (25.0, 20, 250, 250),
@@ -61,7 +61,7 @@ for config in [
     data_rate_megabit_per_s = config[0]
     duration_s = config[1]
 
-    for protocol_chosen in ["tcp", "udp"]:
+    for protocol_chosen in ["udp"]:#["tcp", "udp"]:
 
         if (unique_id % num_machines) == workload_id:
 
@@ -77,8 +77,8 @@ for config in [
             local_shell.perfect_exec(
                 "cd ../../../ns3-sat-sim/simulator; "
                 "./waf --run=\"main_satnet "
-                "--run_dir='../../paper/ns3_experiments/traffic_matrix_load/" + run_dir + "'\""
-                " 2>&1 | tee '../../paper/ns3_experiments/traffic_matrix_load/" + logs_ns3_dir + "/console.txt'",
+                "--run_dir='../../papier2/ns3_experiments/traffic_matrix_load/" + run_dir + "'\""
+                " 2>&1 | tee '../../papier2/ns3_experiments/traffic_matrix_load/" + logs_ns3_dir + "/console.txt'",
                 output_redirect=exputil.OutputRedirect.CONSOLE
             )
 

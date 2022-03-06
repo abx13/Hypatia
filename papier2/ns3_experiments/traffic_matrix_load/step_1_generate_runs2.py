@@ -37,29 +37,29 @@ random.randint(0, 100000000)  # Legacy reasons
 seed_from_to = random.randint(0, 100000000)
 print(params:=sys.argv[1:])
 if not len(params):
-	params = ["16", "4"]#kuiper_630
-	a = set(range(1156, 1256))
+    params = ["16", "4"]#kuiper_630
+    a = set(range(1156, 1256))
 elif "kuiper_630" in params[0] and "100" in params[4]:
-	a = set(range(1156, 1256))
+    a = set(range(1156, 1256))
 elif "telesat_1015" in params[0] and "100" in params[4]:
-	a = set(range(351,451))
+    a = set(range(351,451))
 else:
-	print("erreur parametres non reconnus, editer ce fichier et generate_for_paper")
-	exit(1)
+    print("erreur parametres non reconnus, editer ce fichier et generate_for_paper")
+    exit(1)
 list_from_to = networkload.generate_from_to_reciprocated_random_pairing(list(a), seed_from_to)
 #list_from_to = list_from_to[0:max(10,len(list_from_to))]
 
 reference_rate = 20000 # rate in b/s
 list_proportion  =[random.choice(range(70,130))/100 for _ in range(len(list_from_to))]
-tcp_list_flow_size_byte=[1000000000000 * elt for elt in list_proportion]#tcp : send a fixed size quantity
+tcp_list_flow_size_byte=[10000000 * elt for elt in list_proportion]#tcp : send a fixed size quantity
 udp_list_flow_size_proportion=[elt*reference_rate for elt in list_proportion]#udp : rate relative to the rate given by config below. initially was always 1.
 
 
 for config in [
     # Rate in Mbit/s, duration in seconds, ISL network device queue size pkt for TCP, GSL network device queue size pkt for TCP
     # (UDP queue size is capped at 100)
-    (1.0, 10, 10, 10),
-    #(1.0, 20, 10, 10),
+    #(1.0, 10, 10, 10),
+    (1.0, 20, 10, 10),
     #(1.0, 50, 10, 10),
     #(10.0, 10, 100, 100),
     #(10.0, 20, 100, 100),
@@ -102,10 +102,29 @@ for config in [
         local_shell.make_full_dir(run_dir)
 
         # config_ns3.properties
-        local_shell.copy_file(
-            "templates/template_config_ns3_" + protocol_chosen + ".properties",
-            run_dir + "/config_ns3.properties"
-        )
+        if params == ["16", "4"]:
+            local_shell.copy_file(
+                "templates/template_config_ns3_" + protocol_chosen + ".properties",
+                run_dir + "/config_ns3.properties"
+            )
+            print("default configuration: output name with kuiper_630, 100ms for 20s")
+        elif len(params) == 7:
+            local_shell.copy_file(
+                "templates/template_config_ns3_" + protocol_chosen + "2.properties",
+                run_dir + "/config_ns3.properties"
+            )
+            
+            local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties",
+                                              "[SAT-NET-DIR]", sat_net_dir:="../../../../satellite_networks_state/gen_data/{}_{}_{}_{}".format(params[0].lstrip('main_0').rstrip('.py'),params[3],params[4],params[5]))
+            local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties",
+                                              "[SAT-NET-ROUTES-DIR]", sat_net_dir+"/dynamic_state_{}ms_for_{}s".format(params[2],params[1]))
+            local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties",
+                                              "[DYN-FSTATE-INTERVAL-UPDATE-MS]", str(params[2]))
+                                              
+        else:
+            print("\nconfig_ns3 error, check config_ns3.properties\n")
+            exit(1)
+        
         local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties",
                                               "[SIMULATION-END-TIME-NS]", str(duration_s * 1000 * 1000 * 1000))
         local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties",
@@ -148,17 +167,15 @@ for config in [
                             1000000000000
                         )
                     )
-import time
-if len(params) > 0:
-	#write the commodity list in an accessible place for path generation
-	local_shell.write_file("../../satellite_networks_state/commodites.temp", list(zip([elt[0] for elt in list_from_to],[elt[1] for elt in list_from_to],list_proportion)))
-	#print("infos",a:=list(zip(list_from_to,list_proportion)))
-	print(' '.join(params))
-	#generate network graph
-	
-	local_shell.perfect_exec(
-		"cd ../../satellite_networks_state; "
-		"./generate_for_paper.sh " + ' '.join(params),
-		output_redirect=exputil.OutputRedirect.CONSOLE
-	)
-	
+
+#write the commodity list in an accessible place for path generation
+local_shell.write_file("../../satellite_networks_state/commodites.temp", list(zip([elt[0] for elt in list_from_to],[elt[1] for elt in list_from_to],list_proportion)))
+#print("infos",a:=list(zip(list_from_to,list_proportion)))
+print(' '.join(params))
+#generate network graph
+
+local_shell.perfect_exec(
+    "cd ../../satellite_networks_state; "
+    "./generate_for_paper.sh " + ' '.join(params),
+    output_redirect=exputil.OutputRedirect.CONSOLE
+)
