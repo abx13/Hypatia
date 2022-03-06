@@ -194,48 +194,39 @@ def calculate_fstate_shortest_path_without_gs_relaying2(
 
 	#compute optimal path
 	list_paths = calcul_paths(total_net_graph, prev_fstate, commodity_list)
-	# Forwarding state
-	fstate = {}
+	# Forwarding state : by default, interfaces down and empty routing table
+	fstate = {(cur,dst):(-1,-1,-1) for cur in range(num_satellites+num_ground_stations) for dst in range(num_satellites,num_satellites+num_ground_stations) if cur !=dst}
 
 	# Now write state to file for complete graph
 	output_filename = output_dynamic_state_dir + "/fstate_" + str(time_since_epoch_ns) + ".txt"
 	if enable_verbose_logs:
 		print("  > Writing forwarding state to: " + output_filename)
-
-	with open(output_filename, "w+") as f_out:
-		for i,path in enumerate(list_paths):
-			next_hop_decision=(-1,-1,-1)
+	
+	for i,path in enumerate(list_paths):
 			if path:
 				#src ground station to first sat
 				src_id = path[0]
 				dst_gs_node_id = path[-1]
-				next_hop_decision=(path[1], 0, dst_gs_node_id-num_satellites)
+				next_hop_decision=(path[1], 0, num_isls_per_sat[path[1]] + gid_to_sat_gsl_if_idx[src_id-num_satellites])
 				fstate[(src_id, dst_gs_node_id)] = next_hop_decision
-				if not prev_fstate or prev_fstate[(src_id, dst_gs_node_id)] != next_hop_decision:
-					f_out.write("{},{},{},{},{}\n".format(src_id, dst_gs_node_id, next_hop_decision[0], next_hop_decision[1], next_hop_decision[2]))
 				
 				#last sat to dst ground station
 				next_hop_decision = (dst_gs_node_id,num_isls_per_sat[path[-2]] + gid_to_sat_gsl_if_idx[dst_gs_node_id-num_satellites],0)
 				fstate[(path[-2], dst_gs_node_id)] = next_hop_decision
-				if not prev_fstate or (path[-2], dst_gs_node_id) not in prev_fstate or prev_fstate[(path[-2], dst_gs_node_id)] != next_hop_decision:
-					f_out.write("{},{},{},{},{}\n".format(path[-2], dst_gs_node_id, next_hop_decision[0], next_hop_decision[1], next_hop_decision[2]))
 				
 				#interfaces between satellites
 				for k in range(1,len(path)-2):
 					curr,neighbor_id=path[k],path[k+1]
 					next_hop_decision = (neighbor_id,sat_neighbor_to_if[(curr, neighbor_id)],sat_neighbor_to_if[(neighbor_id, curr)])
 					fstate[(curr, dst_gs_node_id)] = next_hop_decision
-					if not prev_fstate or (curr, dst_gs_node_id) not in prev_fstate or prev_fstate[(curr, dst_gs_node_id)] != next_hop_decision:
-						f_out.write("{},{},{},{},{}\n".format(curr, dst_gs_node_id, next_hop_decision[0], next_hop_decision[1], next_hop_decision[2]))
+	
+	with open(output_filename, "w+") as f_out:
+		for cle in fstate:
+			if not prev_fstate or cle not in prev_fstate or prev_fstate[cle] != fstate[cle]:
+					f_out.write("{},{},{},{},{}\n".format(*cle, *fstate[cle]))
+			
 				
 				
-			
-			else:
-				src_id, dst_id = commodity_list[i]
-				fstate[(src_id,dst_id)]=next_hop_decision
-				if not prev_fstate or prev_fstate[(src_id, dst_id)] != next_hop_decision:
-					f_out.write("{},{},{},{},{}\n".format(src_id, dst_id, next_hop_decision[0], next_hop_decision[1], next_hop_decision[2]))
-			
 
 	# Finally return result
 	return fstate
