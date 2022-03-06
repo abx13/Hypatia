@@ -1,6 +1,6 @@
 import math
 import networkx as nx
-from ..Dynamic_mcnf_paper_code.interface import calcul_paths
+from ..dynamic_mcnf_paper_code.interface import calcul_paths
 
 def calculate_fstate_shortest_path_without_gs_relaying(
         output_dynamic_state_dir,
