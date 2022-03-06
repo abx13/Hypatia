@@ -170,8 +170,7 @@ for config in [
 
 #write the commodity list in an accessible place for path generation
 local_shell.write_file("../../satellite_networks_state/commodites.temp", list(zip([elt[0] for elt in list_from_to],[elt[1] for elt in list_from_to],list_proportion)))
-#print("infos",a:=list(zip(list_from_to,list_proportion)))
-print(' '.join(params))
+
 #generate network graph
 
 local_shell.perfect_exec(

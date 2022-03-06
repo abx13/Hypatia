@@ -28,32 +28,31 @@
 
 ### NS-3 EXPERIMENTS
 
-#cd ns3_experiments || exit 1
-## ns-3: Traffic matrix load
-#cd traffic_matrix_load || exit 1
-#python step_1_generate_runs2.py main_telesat_1015.py 20 5000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4|| exit 1
-#cd ../.. || exit 1
+cd ns3_experiments || exit 1
+# ns-3: Traffic matrix load
+cd traffic_matrix_load || exit 1
+python step_1_generate_runs2.py main_telesat_1015.py 20 5000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4|| exit 1
+cd ../.. || exit 1
 
 #intermède
 ### SATGENPY ANALYSIS
 # Satgenpy analysis
-ls
 cd satgenpy_analysis || exit 1
 python perform_full_analysis.py || exit 1
 cd .. || exit 1
 
-## reprise NS-3 EXPERIMENTS
-#cd ns3_experiments || exit 1
-#cd traffic_matrix_load || exit 1
-#python step_2_run.py 0 || exit 1
-#python step_3_generate_plots.py || exit 1
-#cd ..
-#
-#cd .. || exit 1
-#
-#### Figures
-#
-#cd figures || exit 1
-#python plot_all.py || exit 1
-#python generate_pngs.py || exit 1
-#cd .. || exit 1
+# reprise NS-3 EXPERIMENTS
+cd ns3_experiments || exit 1
+cd traffic_matrix_load || exit 1
+python step_2_run.py 0|| exit 1
+python step_3_generate_plots.py || exit 1
+cd ..
+
+cd .. || exit 1
+
+## Figures
+
+cd figures || exit 1
+python plot_all.py || exit 1
+python generate_pngs.py || exit 1
+cd .. || exit 1
