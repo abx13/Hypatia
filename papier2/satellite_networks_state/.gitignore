@@ -2,3 +2,4 @@ gen_data
 *.pyc
 temp
 input_data/results.txt
+commodites.temp

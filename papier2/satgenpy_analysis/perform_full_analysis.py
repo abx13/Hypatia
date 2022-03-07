@@ -43,101 +43,95 @@ commands_to_run = []
 # Manual
 print("Generating commands for manually selected endpoints pair (printing of routes and RTT over time)...")
 
-# Rio de Janeiro to St. Petersburg with only ISLs on Kuiper
-commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
-                       "../paper/satgenpy_analysis/data ../paper/satellite_networks_state/gen_data/"
-                       "kuiper_630_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls "
-                       "100 200 1174 1229 "
-                       "> ../paper/satgenpy_analysis/data/command_logs/manual_kuiper_isls_1174_to_1229.log 2>&1")
+commands_to_run = []
 
-# Manila to Dalian with only ISLs on Kuiper
+#Moskva-(Moscow) to Dallas-Fort-Worth with only ISLs on Telesat
 commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
-                       "../paper/satgenpy_analysis/data ../paper/satellite_networks_state/gen_data/"
-                       "kuiper_630_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls "
-                       "100 200 1173 1241 "
-                       "> ../paper/satgenpy_analysis/data/command_logs/manual_kuiper_isls_1173_to_1241.log 2>&1")
-
-# Istanbul to Nairobi with only ISLs on Kuiper
-commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
-                       "../paper/satgenpy_analysis/data ../paper/satellite_networks_state/gen_data/"
-                       "kuiper_630_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls "
-                       "100 200 1170 1252 "
-                       "> ../paper/satgenpy_analysis/data/command_logs/manual_kuiper_isls_1170_to_1252.log 2>&1")
-
-# Paris to Moscow with only ISLs on Kuiper
-commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
-                       "../paper/satgenpy_analysis/data ../paper/satellite_networks_state/gen_data/"
-                       "kuiper_630_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls "
-                       "100 200 1180 1177 "
-                       "> ../paper/satgenpy_analysis/data/command_logs/manual_kuiper_isls_1180_to_1177.log 2>&1")
+                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
+                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
+                       " 5000 20 372 411 "
+                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_telesat_isls_372_to_411.log 2>&1")
 commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_graphical_routes_and_rtt "
-                       "../paper/satgenpy_analysis/data ../paper/satellite_networks_state/gen_data/"
-                       "kuiper_630_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls "
-                       "100 200 1180 1177 "
-                       "> ../paper/satgenpy_analysis/data/command_logs/manual_graphical_kuiper_isls_1180_to_1177.log"
-                       " 2>&1")
+                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
+                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
+                       " 5000 20 372 411 "
+                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_graphical_telesat_isls_372_to_411.log 2>&1")
 
-# Chicago (1193) to Zhengzhou (1243) with only ISLs on Kuiper
+#New-York-Newark to Toronto with only ISLs on Telesat 
 commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
-                       "../paper/satgenpy_analysis/data ../paper/satellite_networks_state/gen_data/"
-                       "kuiper_630_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls "
-                       "100 200 1193 1243 "
-                       "> ../paper/satgenpy_analysis/data/command_logs/manual_kuiper_isls_1193_to_1243.log 2>&1")
+                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
+                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
+                       "5000 20 360 407"
+                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_telesat_isls_360_to_407.log 2>&1")
 commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_graphical_routes_and_rtt "
-                       "../paper/satgenpy_analysis/data ../paper/satellite_networks_state/gen_data/"
-                       "kuiper_630_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls "
-                       "100 200 1193 1243 "
-                       "> ../paper/satgenpy_analysis/data/command_logs/manual_graphical_kuiper_isls_1193_to_1243.log"
-                       " 2>&1")
+                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
+                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
+                       "5000 20 360 407"
+                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_graphical_telesat_isls_360_to_407.log 2>&1")
 
-# Paris to Moscow with only ground-station relays (added a grid to support this) on Kuiper
+#Ankara to Chengdu with only ISLs on Telesat 
 commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
-                       "../paper/satgenpy_analysis/data ../paper/satellite_networks_state/gen_data/"
-                       "kuiper_630_isls_none_ground_stations_paris_moscow_grid_algorithm_free_one_only_gs_relays "
-                       "100 200 1156 1232 "
-                       "> ../paper/satgenpy_analysis/data/command_logs/manual_kuiper_isls_1156_to_1232.log 2>&1")
-
+                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
+                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
+                       "5000 20 430 392 "
+                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_telesat_isls_430_to_392.log 2>&1")
 commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_graphical_routes_and_rtt "
-                       "../paper/satgenpy_analysis/data ../paper/satellite_networks_state/gen_data/"
-                       "kuiper_630_isls_none_ground_stations_paris_moscow_grid_algorithm_free_one_only_gs_relays "
-                       "100 200 1156 1232 "
-                       "> ../paper/satgenpy_analysis/data/command_logs/"
-                       "manual_graphical_kuiper_gs_relay_1156_to_1232.log"
-                       " 2>&1")
+                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
+                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
+                       "5000 20 430 392 "
+                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_graphical_telesat_isls_430_to_392.log 2>&1")
 
-
-# Paris (1608) to Luanda (1650) with only ISLs on Starlink
+#Paris to Boston with only ISLs on Telesat 
 commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
-                       "../paper/satgenpy_analysis/data ../paper/satellite_networks_state/gen_data/"
-                       "starlink_550_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls "
-                       "100 200 1608 1650 "
-                       "> ../paper/satgenpy_analysis/data/command_logs/manual_starlink_isls_1608_to_1650.log 2>&1")
+                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
+                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
+                       "5000 20 375 439 "
+                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_telesat_isls_375_to_439.log 2>&1")
 commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_graphical_routes_and_rtt "
-                       "../paper/satgenpy_analysis/data ../paper/satellite_networks_state/gen_data/"
-                       "starlink_550_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls "
-                       "100 200 1608 1650 "
-                       "> ../paper/satgenpy_analysis/data/command_logs/manual_graphical_starlink_isls_1608_to_1650.log"
-                       " 2>&1")
+                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
+                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
+                       "5000 20 375 439 "
+                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_graphical_telesat_isls_375_to_439.log 2>&1")
 
+# Barcelona to Chittagong with only ISLs on Telesat
+commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
+                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
+                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
+                       "5000 20 420 433 "
+                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_telesat_isls_420_to_433.log 2>&1")
+commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_graphical_routes_and_rtt "
+                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
+                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
+                       "5000 20 420 433 "
+                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_graphical_telesat_isls_420_to_433.log 2>&1")
+
+# Santiago to Bangalore with only ISLs on Telesat
+commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
+                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
+                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
+                       "5000 20 401 379 "
+                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_telesat_isls_401_to_379.log 2>&1")
+commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_graphical_routes_and_rtt "
+                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
+                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
+                       "5000 20 401 379 "
+                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_graphical_telesat_isls_401_to_379.log 2>&1")
 
 # Constellation comparison
 print("Generating commands for constellation comparison...")
 for satgenpy_generated_constellation in [
-    "kuiper_630_isls_none_ground_stations_paris_moscow_grid_algorithm_free_one_only_gs_relays",
-    "kuiper_630_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls",
-    "starlink_550_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls",
-    "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls"
+    "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2"
 ]:
-    for duration_s in [200]:
-        list_update_interval_ms = [50, 100, 1000]
+    for duration_s in [20]:
+        list_update_interval_ms = [5000]
 
         # Path
         for update_interval_ms in list_update_interval_ms:
             commands_to_run.append(
                 "cd ../../satgenpy; "
                 "python -m satgen.post_analysis.main_analyze_path "
-                "../paper/satgenpy_analysis/data ../paper/satellite_networks_state/gen_data/%s %d %d "
-                "> ../paper/satgenpy_analysis/data/command_logs/constellation_comp_path_%s_%dms_for_%ds.log "
+                "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/%s %d %d "
+                "> ../papier2/satgenpy_analysis/data/command_logs/constellation_comp_path_%s_%dms_for_%ds.log "
                 "2>&1" % (
                     satgenpy_generated_constellation, update_interval_ms, duration_s,
                     satgenpy_generated_constellation, update_interval_ms, duration_s
@@ -149,8 +143,8 @@ for satgenpy_generated_constellation in [
             commands_to_run.append(
                 "cd ../../satgenpy; "
                 "python -m satgen.post_analysis.main_analyze_rtt "
-                "../paper/satgenpy_analysis/data ../paper/satellite_networks_state/gen_data/%s %d %d "
-                "> ../paper/satgenpy_analysis/data/command_logs/constellation_comp_rtt_%s_%dms_for_%ds.log "
+                "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/%s %d %d "
+                "> ../papier2/satgenpy_analysis/data/command_logs/constellation_comp_rtt_%s_%dms_for_%ds.log "
                 "2>&1" % (
                     satgenpy_generated_constellation, update_interval_ms, duration_s,
                     satgenpy_generated_constellation, update_interval_ms, duration_s
@@ -161,8 +155,8 @@ for satgenpy_generated_constellation in [
         commands_to_run.append(
             "cd ../../satgenpy; "
             "python -m satgen.post_analysis.main_analyze_time_step_path "
-            "../paper/satgenpy_analysis/data ../paper/satellite_networks_state/gen_data/%s %s %d "
-            "> ../paper/satgenpy_analysis/data/command_logs/constellation_comp_time_step_path_%s_%ds.log "
+            "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/%s %s %d "
+            "> ../papier2/satgenpy_analysis/data/command_logs/constellation_comp_time_step_path_%s_%ds.log "
             "2>&1" % (
                 satgenpy_generated_constellation,
                 ",".join(list(map(lambda x: str(x), list_update_interval_ms))),
@@ -171,53 +165,6 @@ for satgenpy_generated_constellation in [
                 duration_s
             )
         )
-commands_to_run = []
-
-#Moskva-(Moscow) to Dallas-Fort-Worth with only ISLs on Telesat
-commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
-                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
-                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
-                       " 5000 20 372 411 "
-                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_telesat_isls_372_to_411.log 2>&1")
-
-#New-York-Newark to Toronto with only ISLs on Telesat 
-commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
-                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
-                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
-                       "5000 20 360 407"
-                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_kuiper_isls_360_to_407.log 2>&1")
-
-#Ankara to Chengdu with only ISLs on Telesat 
-commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
-                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
-                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
-                       "5000 20 430 392 "
-                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_kuiper_isls_430_to_392.log 2>&1")
-
-#Paris to Boston with only ISLs on Telesat 
-commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
-                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
-                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
-                       "5000 20 375 439 "
-                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_telesat_isls_375_to_439.log 2>&1")
-                       
-
-# Barcelona to Chittagong with only ISLs on Telesat
-commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
-                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
-                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls "
-                       "5000 20 420 433 "
-                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_kuiper_isls_420_to_433.log 2>&1")
-
-
-# Santiago to Bangalore with only ISLs on Telesat
-commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
-                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
-                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
-                       "5000 20 401 379 "
-                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_starlink_isls_401_to_379.log 2>&1")
-
-
 
 # Run the commands
 print("Running commands (at most %d in parallel)..." % max_num_processes)

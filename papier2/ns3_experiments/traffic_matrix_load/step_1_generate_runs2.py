@@ -42,7 +42,7 @@ if not len(params):
 elif "kuiper_630" in params[0] and "100" in params[4]:
     a = set(range(1156, 1256))
 elif "telesat_1015" in params[0] and "100" in params[4]:
-    a = set(range(351,451))
+    a = set(range(351,401))
 else:
     print("erreur parametres non reconnus, editer ce fichier et generate_for_paper")
     exit(1)
