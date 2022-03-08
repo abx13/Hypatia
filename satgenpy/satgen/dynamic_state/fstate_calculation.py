@@ -163,7 +163,8 @@ def calculate_fstate_shortest_path_without_gs_relaying2(
 		ground_station_satellites_in_range_candidates,
 		sat_neighbor_to_if,
 		prev_fstate,
-		enable_verbose_logs
+		enable_verbose_logs,
+		is_last
 ):
 	#get the commodity list
 
@@ -224,6 +225,13 @@ def calculate_fstate_shortest_path_without_gs_relaying2(
 		for cle in fstate:
 			if not prev_fstate or cle not in prev_fstate or prev_fstate[cle] != fstate[cle]:
 					f_out.write("{},{},{},{},{}\n".format(*cle, *fstate[cle]))
+					if cle in [(431,381), (343,381), (5,381), (6,381)]:
+						print(output_filename, "ecriture fstate",cle,fstate[cle])
+			elif cle in [(431,381), (343,381), (5,381), (6,381)]:
+				print(output_filename, "fstate non ecrit ", cle, fstate[cle], not prev_fstate, cle not in prev_fstate, prev_fstate[cle] != fstate[cle])
+	if is_last:
+		with open(output_filename+".temp", "w+") as f_out:
+			f_out.write(str(fstate))
 			
 				
 				

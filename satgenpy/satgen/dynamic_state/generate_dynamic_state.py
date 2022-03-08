@@ -65,6 +65,11 @@ def generate_dynamic_state(
                     time_since_epoch_ns, time_step_ns / 1000000
                 ))
             i += 1
+        #tell to save complete fstate to ensure routing table continuity
+        #is_last is only necessary with mcnf algorithm because a change in initialisation changes the output
+        if time_since_epoch_ns == simulation_end_time_ns-time_step_ns:
+            is_last=True 
+        
         prev_output = generate_dynamic_state_at(
             output_dynamic_state_dir,
             epoch,
@@ -77,7 +82,8 @@ def generate_dynamic_state(
             max_isl_length_m,
             dynamic_state_algorithm,
             prev_output,
-            enable_verbose_logs
+            enable_verbose_logs,
+            is_last
         )
 
 
@@ -93,7 +99,8 @@ def generate_dynamic_state_at(
         max_isl_length_m,
         dynamic_state_algorithm,
         prev_output,
-        enable_verbose_logs
+        enable_verbose_logs,
+        is_last
 ):
     if enable_verbose_logs:
         print("FORWARDING STATE AT T = " + (str(time_since_epoch_ns))
@@ -254,7 +261,8 @@ def generate_dynamic_state_at(
             sat_neighbor_to_if,
             list_gsl_interfaces_info,
             prev_output,
-            enable_verbose_logs
+            enable_verbose_logs,
+            is_last
         )
     
     elif dynamic_state_algorithm == "algorithm_free_gs_one_sat_many_only_over_isls":
@@ -274,7 +282,7 @@ def generate_dynamic_state_at(
         )
     
     elif dynamic_state_algorithm == "algorithm_free_gs_one_sat_many_only_over_isls2":
-
+        raise("error : check and bring corrections to algorithm_free_gs_one_sat_many_only_over_isls2 function")
         return algorithm_free_gs_one_sat_many_only_over_isls2(
             output_dynamic_state_dir,
             time_since_epoch_ns,
@@ -286,7 +294,8 @@ def generate_dynamic_state_at(
             sat_neighbor_to_if,
             list_gsl_interfaces_info,
             prev_output,
-            enable_verbose_logs
+            enable_verbose_logs,
+            is_last
         )
 
     elif dynamic_state_algorithm == "algorithm_free_one_only_gs_relays":
@@ -320,7 +329,7 @@ def generate_dynamic_state_at(
         )
     
     elif dynamic_state_algorithm == "algorithm_paired_many_only_over_isls2":
-
+        raise("error : check and bring corrections to algorithm_paired_many_only_over_isls2 function")
         return algorithm_paired_many_only_over_isls2(
             output_dynamic_state_dir,
             time_since_epoch_ns,
@@ -332,7 +341,8 @@ def generate_dynamic_state_at(
             sat_neighbor_to_if,
             list_gsl_interfaces_info,
             prev_output,
-            enable_verbose_logs
+            enable_verbose_logs,
+            is_last
         )
 
     else:
