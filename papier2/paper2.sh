@@ -24,21 +24,22 @@
 
 # fait dans generate_runs2 de NS-3 experiments
 
-
+arguments='main_telesat_1015.py 10 5000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4'
 
 ### NS-3 EXPERIMENTS
 
 cd ns3_experiments || exit 1
 # ns-3: Traffic matrix load
 cd traffic_matrix_load || exit 1
-python step_1_generate_runs2.py main_telesat_1015.py 20 5000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4|| exit 1
+python step_1_generate_runs2.py $arguments|| exit 1
 cd ../.. || exit 1
 
 #intermède
 ### SATGENPY ANALYSIS
 # Satgenpy analysis
 cd satgenpy_analysis || exit 1
-python perform_full_analysis.py || exit 1
+#put same parameters as above
+python perform_full_analysis.py $arguments|| exit 1
 cd .. || exit 1
 
 # reprise NS-3 EXPERIMENTS

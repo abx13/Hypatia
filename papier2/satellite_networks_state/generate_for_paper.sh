@@ -113,9 +113,12 @@ fi
 
 
 if [ "${id}" = "16" ]; then
-  python main_telesat_1015.py 20 5000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 ${num_threads}
+  python main_telesat_1015.py 10 5000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 ${num_threads}
 fi
 
+# to compare with Algo Francois
 if [ "${id}" = "17" ]; then
-  python main_telesat_1015.py 200 100 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 ${num_threads}
+  python main_telesat_1015.py 10 5000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls ${num_threads}
 fi
+
+
