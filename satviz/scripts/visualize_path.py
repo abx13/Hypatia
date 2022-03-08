@@ -40,6 +40,7 @@ PHASE_DIFF = True
 EPOCH = "2000-01-01 00:00:00"
 
 # CONSTELLATION SPECIFIC PARAMETERS
+"""
 # STARLINK 550
 NAME = "starlink_550"
 
@@ -56,10 +57,9 @@ MAX_ISL_LENGTH_M = 2 * math.sqrt(math.pow(EARTH_RADIUS + ALTITUDE_M, 2) - math.p
 NUM_ORBS = 72
 NUM_SATS_PER_ORB = 22
 INCLINATION_DEGREE = 53
-
-
-# KUIPER 630
 """
+"""
+# KUIPER 630
 NAME = "kuiper_630"
 
 ################################################################
@@ -77,20 +77,38 @@ NUM_SATS_PER_ORB = 34
 INCLINATION_DEGREE = 51.9
 """
 
+# Telesat 1015
+NAME = "telesat_1015"
+
+################################################################
+# The below constants are taken from Telesat's FCC filing as below:
+# [1]: https://fcc.report/IBFS/SAT-MPL-20200526-00053/2378318.pdf
+################################################################
+
+MEAN_MOTION_REV_PER_DAY = 13.66  # Altitude ~1015 km
+ALTITUDE_M = 1015000  # Altitude ~1015 km
+SATELLITE_CONE_RADIUS_M = ALTITUDE_M / math.tan(math.radians(10.0))  # Considering an elevation angle of 10 degrees;
+MAX_GSL_LENGTH_M = math.sqrt(math.pow(SATELLITE_CONE_RADIUS_M, 2) + math.pow(ALTITUDE_M, 2))
+# ISLs are not allowed to dip below 80 km altitude in order to avoid weather conditions
+MAX_ISL_LENGTH_M = 2 * math.sqrt(math.pow(EARTH_RADIUS + ALTITUDE_M, 2) - math.pow(EARTH_RADIUS + 80000, 2))
+NUM_ORBS = 27
+NUM_SATS_PER_ORB = 13
+INCLINATION_DEGREE = 98.98
+
 # General files needed to generate visualizations; Do not change for different simulations
 topFile = "../static_html/top.html"
 bottomFile = "../static_html/bottom.html"
 city_detail_file = "../../paper/satellite_networks_state/input_data/ground_stations_cities_sorted_by_estimated_2025_pop_top_1000.basic.txt"
 
 # Time in ms for which visualization will be generated
-GEN_TIME=46800  #ms
+GEN_TIME=10000  #ms
 
 # Input file; Generated during simulation
 # Note the file_name consists of the 2 city IDs being offset by the size of the constellation
 # City IDs are available in the city_detail_file.
 # If city ID is X (for Paris X = 24) and constellation is Starlink_550 (1584 satellites),
 # then offset ID is 1584 + 24 = 1608.
-path_file = "../../paper/satgenpy_analysis/data/starlink_550_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls/100ms_for_200s/manual/data/networkx_path_1608_to_1650.txt"
+path_file = "../../papier2_backup/satgenpy_analysis/data/telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2/5000ms_for_20s/manual/data/networkx_path_372_to_411.txt"
 
 # Output directory for creating visualization html files
 OUT_DIR = "../viz_output/"
