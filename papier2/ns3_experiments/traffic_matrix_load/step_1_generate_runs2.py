@@ -35,7 +35,7 @@ local_shell.remove_force_recursive("data")
 random.seed(123456789)
 random.randint(0, 100000000)  # Legacy reasons
 seed_from_to = random.randint(0, 100000000)
-debitISL=float(sys.argv[1])
+debitISL=int(sys.argv[1])
 params=sys.argv[2:]
 if not len(params):
     params = ["16", "4"]#kuiper_630
@@ -59,7 +59,7 @@ udp_list_flow_size_proportion=[elt*reference_rate for elt in list_proportion]#ud
 for config in [
     # Rate in Mbit/s, duration in seconds, ISL network device queue size pkt for TCP, GSL network device queue size pkt for TCP
     # (UDP queue size is capped at 100)
-    (debitISL, int(params[1]), int(10*debitISL), int(10*debitISL)),
+    (debitISL, int(params[1]), 10*debitISL, 10*debitISL),
     #(1.0, 20, 10, 10),
     #(1.0, 50, 10, 10),
     #(10.0, 10, 100, 100),
