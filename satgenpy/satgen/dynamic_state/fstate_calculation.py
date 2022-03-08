@@ -175,7 +175,10 @@ def calculate_fstate_shortest_path_without_gs_relaying2(
         commodity_list=eval(fcomm.read())
         if enable_verbose_logs:
             print('lecture commodites') 
-
+    with open("debitISL.temp","r") as fISL:
+        debitISL=eval(fISL.readline())
+        if enable_verbose_logs:
+            print("debit lien ISL:",debitISL,"Mb/s")
     # Calculate shortest path distances
     if enable_verbose_logs:
         print("  > Calculating mcnf for graph without ground-station relays")
@@ -197,7 +200,7 @@ def calculate_fstate_shortest_path_without_gs_relaying2(
         #	total_net_graph.add_edge(satid, num_satellites+groundStationId, weight = 10000000)#distanceSatGS
 
     #compute optimal path
-    list_paths = calcul_paths(total_net_graph, prev_fstate, commodity_list)
+    list_paths = calcul_paths(total_net_graph, prev_fstate, commodity_list, debitISL)
     # Forwarding state : by default, interfaces down and empty routing table
     fstate = {(cur,dst):(-1,-1,-1) for cur in range(num_satellites+num_ground_stations) for dst in range(num_satellites,num_satellites+num_ground_stations) if cur !=dst}
 
@@ -228,10 +231,7 @@ def calculate_fstate_shortest_path_without_gs_relaying2(
         for cle in fstate:
             if not prev_fstate or cle not in prev_fstate or prev_fstate[cle] != fstate[cle]:
                     f_out.write("{},{},{},{},{}\n".format(*cle, *fstate[cle]))
-                    if cle in [(431,381), (343,381), (5,381), (6,381)]:
-                        print(output_filename, "ecriture fstate",cle,fstate[cle])
-            elif cle in [(431,381), (343,381), (5,381), (6,381)]:
-                print(output_filename, "fstate non ecrit ", cle, fstate[cle], not prev_fstate, cle not in prev_fstate, prev_fstate[cle] != fstate[cle])
+                    
     if is_last:
         with open(output_filename+".temp", "w+") as f_out:
             f_out.write(str(fstate))

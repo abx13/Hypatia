@@ -30,56 +30,36 @@ local_shell.perfect_exec("rm -rf runs/*/logs_ns3")
 # Get workload identifier from argument
 num_machines = 1
 args = sys.argv[1:]
-if len(args) != 1 or int(args[0]) < 0 or int(args[0]) >= num_machines:
+if len(args) != 3 or int(args[0]) < 0 or int(args[0]) >= num_machines:
     raise ValueError("Need to have have first argument in range [0, %d) to pick workload" % num_machines)
 workload_id = int(args[0])
 
 # One-by-one run all experiments (such that they don't interfere with each other)
 unique_id = 0
-for config in [
-    # Rate in Mbit/s, duration in seconds
-    (1.0, 10, 10, 10),
-    #(1.0, 20, 10, 10),
-    # (1.0, 50, 10, 10),
-    # (10.0, 10, 100, 100),
-    # (10.0, 20, 100, 100),
-    # (10.0, 50, 100, 100),
-    # (25.0, 10, 250, 250),
-    # (25.0, 20, 250, 250),
-    # (25.0, 50, 250, 250),
-    # (100.0, 10, 1000, 1000),
-    # (100.0, 20, 1000, 1000),
-    # (250.0, 10, 2500, 2500),
-    # (250.0, 20, 2500, 2500),
-    # (1000.0, 10, 10000, 10000),
-    # (2500.0, 10, 25000, 25000),
-    # (10000.0, 1, 100000, 100000),
-    # (10000.0, 2, 100000, 100000),
-]:
 
-    # Retrieve values from the config
-    data_rate_megabit_per_s = config[0]
-    duration_s = config[1]
+# Retrieve values from the config
+data_rate_megabit_per_s = float(args[1])
+duration_s = float(args[2])
 
-    for protocol_chosen in ["udp"]:#["tcp", "udp"]:
+for protocol_chosen in ["udp"]:#["tcp", "udp"]:
 
-        if (unique_id % num_machines) == workload_id:
+	if (unique_id % num_machines) == workload_id:
 
-            # Prepare run directory
-            run_dir = "runs/run_loaded_tm_pairing_%d_Mbps_for_%ds_with_%s" % (
-                data_rate_megabit_per_s, duration_s, protocol_chosen
-            )
-            logs_ns3_dir = run_dir + "/logs_ns3"
-            local_shell.remove_force_recursive(logs_ns3_dir)
-            local_shell.make_full_dir(logs_ns3_dir)
+		# Prepare run directory
+		run_dir = "runs/run_loaded_tm_pairing_%d_Mbps_for_%ds_with_%s" % (
+			data_rate_megabit_per_s, duration_s, protocol_chosen
+		)
+		logs_ns3_dir = run_dir + "/logs_ns3"
+		local_shell.remove_force_recursive(logs_ns3_dir)
+		local_shell.make_full_dir(logs_ns3_dir)
 
-            # Perform run
-            local_shell.perfect_exec(
-                "cd ../../../ns3-sat-sim/simulator; "
-                "./waf --run=\"main_satnet "
-                "--run_dir='../../papier2/ns3_experiments/traffic_matrix_load/" + run_dir + "'\""
-                " 2>&1 | tee '../../papier2/ns3_experiments/traffic_matrix_load/" + logs_ns3_dir + "/console.txt'",
-                output_redirect=exputil.OutputRedirect.CONSOLE
-            )
+		# Perform run
+		local_shell.perfect_exec(
+			"cd ../../../ns3-sat-sim/simulator; "
+			"./waf --run=\"main_satnet "
+			"--run_dir='../../papier2/ns3_experiments/traffic_matrix_load/" + run_dir + "'\""
+			" 2>&1 | tee '../../papier2/ns3_experiments/traffic_matrix_load/" + logs_ns3_dir + "/console.txt'",
+			output_redirect=exputil.OutputRedirect.CONSOLE
+		)
 
-        unique_id += 1
+	unique_id += 1
