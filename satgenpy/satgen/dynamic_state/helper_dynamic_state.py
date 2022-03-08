@@ -118,7 +118,6 @@ def help_dynamic_state(
             (current * time_step_ns) / 1e6,
             ((current + num_time_steps) * time_step_ns) / 1e6
         ))
-        print(list(range(current * time_step_ns, (current + num_time_steps) * time_step_ns, time_step_ns)))
         list_args.append((
             output_dynamic_state_dir,
             epoch,

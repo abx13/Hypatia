@@ -35,7 +35,7 @@ local_shell.remove_force_recursive("data")
 random.seed(123456789)
 random.randint(0, 100000000)  # Legacy reasons
 seed_from_to = random.randint(0, 100000000)
-print(params:=sys.argv[1:])
+params=sys.argv[1:]
 if not len(params):
     params = ["16", "4"]#kuiper_630
     a = set(range(1156, 1256))
@@ -49,7 +49,7 @@ else:
 list_from_to = networkload.generate_from_to_reciprocated_random_pairing(list(a), seed_from_to)
 #list_from_to = list_from_to[0:max(10,len(list_from_to))]
 
-reference_rate = 20000 # rate in b/s
+reference_rate = 0.2 # rate in Mb/s
 list_proportion  =[random.choice(range(70,130))/100 for _ in range(len(list_from_to))]
 tcp_list_flow_size_byte=[10000000 * elt for elt in list_proportion]#tcp : send a fixed size quantity
 udp_list_flow_size_proportion=[elt*reference_rate for elt in list_proportion]#udp : rate relative to the rate given by config below. initially was always 1.

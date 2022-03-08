@@ -38,8 +38,8 @@ workload_id = int(args[0])
 unique_id = 0
 for config in [
     # Rate in Mbit/s, duration in seconds
-    # (1.0, 10, 10, 10),
-    (1.0, 20, 10, 10),
+    (1.0, 10, 10, 10),
+    #(1.0, 20, 10, 10),
     # (1.0, 50, 10, 10),
     # (10.0, 10, 100, 100),
     # (10.0, 20, 100, 100),

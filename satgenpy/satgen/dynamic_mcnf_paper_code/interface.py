@@ -21,8 +21,8 @@ def nx2graph(graphnx, verif=False):
 		#satellite links are bidirectionnal
 		#to make an inversible conversion, set g[u][v],g[v][u] =  data['weight'],data['weight']
 		#in Francois's algo, all we care about is bandwidth
-		g[u][v]=10000000#by default 10Mb∕s
-		g[v][u]=10000000
+		g[u][v]=1#rate in Mb/s
+		g[v][u]=1
 	return g
 
 def fstate2sol(fstate,list_commodities):
