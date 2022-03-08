@@ -30,7 +30,7 @@ local_shell.perfect_exec("rm -rf runs/*/logs_ns3")
 # Get workload identifier from argument
 num_machines = 1
 args = sys.argv[1:]
-if len(args) != 3 or int(args[0]) < 0 or int(args[0]) >= num_machines:
+if len(args) != 4 or int(args[0]) < 0 or int(args[0]) >= num_machines:
     raise ValueError("Need to have have first argument in range [0, %d) to pick workload" % num_machines)
 workload_id = int(args[0])
 
@@ -46,8 +46,8 @@ for protocol_chosen in ["udp"]:#["tcp", "udp"]:
 	if (unique_id % num_machines) == workload_id:
 
 		# Prepare run directory
-		run_dir = "runs/run_loaded_tm_pairing_%d_Mbps_for_%ds_with_%s" % (
-			data_rate_megabit_per_s, duration_s, protocol_chosen
+		run_dir = "runs/run_loaded_tm_pairing_%d_Mbps_for_%ds_with_%s_%s" % (
+			data_rate_megabit_per_s, duration_s, protocol_chosen, args[3]
 		)
 		logs_ns3_dir = run_dir + "/logs_ns3"
 		local_shell.remove_force_recursive(logs_ns3_dir)

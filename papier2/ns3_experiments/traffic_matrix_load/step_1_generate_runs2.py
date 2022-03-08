@@ -96,8 +96,8 @@ for config in [
             raise ValueError("Unknown protocol chosen: " + protocol_chosen)
 
         # Prepare run directory
-        run_dir = "runs/run_loaded_tm_pairing_{}_Mbps_for_{}s_with_{}".format(
-            data_rate_megabit_per_s, duration_s, protocol_chosen
+        run_dir = "runs/run_loaded_tm_pairing_{}_Mbps_for_{}s_with_{}_{}".format(
+            data_rate_megabit_per_s, duration_s, protocol_chosen, params[5]
         )
         local_shell.remove_force_recursive(run_dir)
         local_shell.make_full_dir(run_dir)

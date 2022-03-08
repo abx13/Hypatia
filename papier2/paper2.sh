@@ -32,20 +32,20 @@ echo $debitISL > satellite_networks_state/debitISL.temp
 cd ns3_experiments || exit 1
 # ns-3: Traffic matrix load
 cd traffic_matrix_load || exit 1
-python step_1_generate_runs2.py $debitISL ${arguments[*]} || exit 1
+#python step_1_generate_runs2.py $debitISL ${arguments[*]} || exit 1
 cd ../.. || exit 1
 
 #intermède
 ### SATGENPY ANALYSIS
 # Satgenpy analysis
 cd satgenpy_analysis || exit 1
-#python perform_full_analysis.py $arguments|| exit 1
+python perform_full_analysis.py $arguments|| exit 1
 cd .. || exit 1
 
 # reprise NS-3 EXPERIMENTS
 cd ns3_experiments || exit 1
 cd traffic_matrix_load || exit 1
-python step_2_run.py 0 $debitISL ${arguments[1]} || exit 1
+python step_2_run.py 0 $debitISL ${arguments[1]} ${arguments[5]} || exit 1
 python step_3_generate_plots.py || exit 1
 cd ..
 
