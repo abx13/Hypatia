@@ -73,6 +73,12 @@ def analyze_rtt(
     max_gsl_length_m = exputil.parse_positive_float(description.get_property_or_fail("max_gsl_length_m"))
     max_isl_length_m = exputil.parse_positive_float(description.get_property_or_fail("max_isl_length_m"))
 
+    #get commodities
+    with open("../papier2/satellite_networks_state/commodites.temp","r") as f_comms:
+        list_comms = eval(f_comms.readline())
+        #for (src_node_id,dst_node_id,_) in list_comms:
+        #    src = src_node_id - len(satellites)
+        #    dst = dst_node_id - len(satellites)
     # Analysis
     rtt_list_per_pair = []
     for i in range(len(ground_stations)):
@@ -102,10 +108,9 @@ def analyze_rtt(
                                                                  list_isls, max_gsl_length_m, max_isl_length_m)
 
             # Go over each pair of ground stations and calculate the length
-            for src in range(len(ground_stations)):
-                for dst in range(src + 1, len(ground_stations)):
-                    src_node_id = len(satellites) + src
-                    dst_node_id = len(satellites) + dst
+            for (src_node_id,dst_node_id,_) in list_comms:
+                    src = src_node_id - len(satellites)
+                    dst = dst_node_id - len(satellites)
                     path = get_path(src_node_id, dst_node_id, fstate)
                     if path is None:
                         unreachable_per_pair[(src, dst)] += 1
@@ -128,8 +133,11 @@ def analyze_rtt(
     list_max_minus_min_rtt_ns = []
     list_max_rtt_to_min_rtt_slowdown = []
     list_max_rtt_to_geodesic_slowdown = []
-    for src in range(len(ground_stations)):
-        for dst in range(src + 1, len(ground_stations)):
+    #for src in range(len(ground_stations)):
+    #    for dst in range(src + 1, len(ground_stations)):
+    for (src_node_id,dst_node_id,_) in list_comms:
+            src = src_node_id - len(satellites)
+            dst = dst_node_id - len(satellites)
             min_rtt_ns = np.min(rtt_list_per_pair[src][dst])
             max_rtt_ns = np.max(rtt_list_per_pair[src][dst])
             max_rtt_slowdown = float(max_rtt_ns) / float(min_rtt_ns)
@@ -167,8 +175,11 @@ def analyze_rtt(
     # Largest RTT delta
     with open(data_dir + "/top_10_largest_rtt_delta.txt", "w+") as f_out:
         largest_rtt_delta_list = []
-        for src in range(len(ground_stations)):
-            for dst in range(src + 1, len(ground_stations)):
+        #for src in range(len(ground_stations)):
+        #    for dst in range(src + 1, len(ground_stations)):
+        for (src_node_id,dst_node_id,_) in list_comms:
+                src = src_node_id - len(satellites)
+                dst = dst_node_id - len(satellites)
                 min_rtt_ns = np.min(rtt_list_per_pair[src][dst])
                 max_rtt_ns = np.max(rtt_list_per_pair[src][dst])
                 largest_rtt_delta_list.append((max_rtt_ns - min_rtt_ns, min_rtt_ns, max_rtt_ns, src, dst))

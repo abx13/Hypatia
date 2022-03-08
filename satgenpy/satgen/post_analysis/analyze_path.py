@@ -71,6 +71,13 @@ def analyze_path(
     time_step_num_path_changes = []
     time_step_num_fstate_updates = []
 
+    #get commodities list
+    with open("../papier2/satellite_networks_state/commodites.temp","r") as f_comms:
+            list_comms = eval(f_comms.readline())
+            #for (src_node_id,dst_node_id,_) in list_comms:
+            #    src = src_node_id - len(satellites)
+            #    dst = dst_node_id - len(satellites)
+
     # For each time moment
     fstate = {}
     num_iterations = simulation_end_time_ns / dynamic_state_update_interval_ns
@@ -90,19 +97,18 @@ def analyze_path(
                 num_fstate_updates += 1
 
             # Go over each pair of ground stations and calculate the length
-            for src in range(len(ground_stations)):
-                for dst in range(src + 1, len(ground_stations)):
-                    src_node_id = len(satellites) + src
-                    dst_node_id = len(satellites) + dst
-                    path = get_path(src_node_id, dst_node_id, fstate)
-                    if path is None:
-                        if len(path_list_per_pair[src][dst]) == 0 or path_list_per_pair[src][dst][-1] != []:
-                            path_list_per_pair[src][dst].append([])
-                            num_path_changes += 1
-                    else:
-                        if len(path_list_per_pair[src][dst]) == 0 or path != path_list_per_pair[src][dst][-1]:
-                            path_list_per_pair[src][dst].append(path)
-                            num_path_changes += 1
+            for (src_node_id,dst_node_id,_) in list_comms:
+                src = src_node_id - len(satellites)
+                dst = dst_node_id - len(satellites)
+                path = get_path(src_node_id, dst_node_id, fstate)
+                if path is None:
+                    if len(path_list_per_pair[src][dst]) == 0 or path_list_per_pair[src][dst][-1] != []:
+                        path_list_per_pair[src][dst].append([])
+                        num_path_changes += 1
+                else:
+                    if len(path_list_per_pair[src][dst]) == 0 or path != path_list_per_pair[src][dst][-1]:
+                        path_list_per_pair[src][dst].append(path)
+                        num_path_changes += 1
 
         # First iteration has an update for all, which is not interesting
         # to show in the ECDF and is not really a "change" / "update"
@@ -137,8 +143,9 @@ def analyze_path(
     list_max_minus_min_hop_count = []
     list_max_hop_count_to_min_hop_count = []
     list_num_path_changes = []
-    for src in range(len(ground_stations)):
-        for dst in range(src + 1, len(ground_stations)):
+    for (src_node_id,dst_node_id,_) in list_comms:
+            src = src_node_id - len(satellites)
+            dst = dst_node_id - len(satellites)
             min_hop_count = np.min(hop_count_list_per_pair[src][dst])
             max_hop_count = np.max(hop_count_list_per_pair[src][dst])
             list_max_hop_count_to_min_hop_count.append(float(max_hop_count) / float(min_hop_count))
@@ -164,8 +171,9 @@ def analyze_path(
     # Largest hop count delta
     with open(data_dir + "/top_10_largest_hop_count_delta.txt", "w+") as f_out:
         largest_hop_count_delta_list = []
-        for src in range(len(ground_stations)):
-            for dst in range(src + 1, len(ground_stations)):
+        for (src_node_id,dst_node_id,_) in list_comms:
+                src = src_node_id - len(satellites)
+                dst = dst_node_id - len(satellites)
                 min_hop_count = np.min(hop_count_list_per_pair[src][dst])
                 max_hop_count = np.max(hop_count_list_per_pair[src][dst])
                 largest_hop_count_delta_list.append((max_hop_count - min_hop_count, min_hop_count, max_hop_count,

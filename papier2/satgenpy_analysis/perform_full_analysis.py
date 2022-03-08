@@ -49,6 +49,18 @@ commands_to_run = []
 commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
                        "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
                        "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
+                       " 5000 20 363 381 "
+                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_telesat_isls_372_to_411.log 2>&1")
+commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_graphical_routes_and_rtt "
+                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
+                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
+                       " 5000 20 363 381 "
+                       "> ../papier2/satgenpy_analysis/data/command_logs/manual_graphical_telesat_isls_372_to_411.log 2>&1")
+
+#Moskva-(Moscow) to Dallas-Fort-Worth with only ISLs on Telesat
+commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
+                       "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
+                       "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
                        " 5000 20 372 411 "
                        "> ../papier2/satgenpy_analysis/data/command_logs/manual_telesat_isls_372_to_411.log 2>&1")
 commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_graphical_routes_and_rtt "
