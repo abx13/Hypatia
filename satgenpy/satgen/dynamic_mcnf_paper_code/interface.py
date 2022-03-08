@@ -9,7 +9,7 @@ def graph2nx(graphf):
 		g.add_edges_from([(node,neigh,{"weight":neighs[neigh]}) for neigh in neighs])
 	return g
 	
-def nx2graph(graphnx, verif=False): 
+def nx2graph(graphnx, debitISL, verif=False): 
 	#converts networkx graph to graph suitable with Francois's algos
 	if verif:
 		for i in graphnx.nodes:
@@ -21,8 +21,8 @@ def nx2graph(graphnx, verif=False):
 		#satellite links are bidirectionnal
 		#to make an inversible conversion, set g[u][v],g[v][u] =  data['weight'],data['weight']
 		#in Francois's algo, all we care about is bandwidth
-		g[u][v]=1#rate in Mb/s
-		g[v][u]=1
+		g[u][v]=debitISL#rate in Mb/s
+		g[v][u]=debitISL
 	return g
 
 def fstate2sol(fstate,list_commodities):
@@ -69,7 +69,7 @@ def elimineLiensImpossibles(graph,commodites):
 			diff_commodites.append(idcomm)
 	return diff_commodites,commodites_simplifiees
 
-def calcul_paths(graph,prev_fstate,commodity_list):
+def calcul_paths(graph,prev_fstate,commodity_list, debitISL):
 	#select computable commodities and create diff
 	diff_commodites,commodites_simplifiees=elimineLiensImpossibles(graph,commodity_list)
 	
@@ -85,7 +85,7 @@ def calcul_paths(graph,prev_fstate,commodity_list):
 		else:#this is a new commodity, compute shortest path
 			init_path_list_simplifie.append(nx.shortest_path(graph, src:=comm[0], dst:=comm[1]))
 	#convert graph
-	total_net_graph_differentformat=nx2graph(graph)
+	total_net_graph_differentformat=nx2graph(graph, debitISL)
 	#compute new paths
 	list_paths = SRR_arc_node_one_timestep(total_net_graph_differentformat, commodites_simplifiees, init_path_list_simplifie)
 	#add empty solutions
