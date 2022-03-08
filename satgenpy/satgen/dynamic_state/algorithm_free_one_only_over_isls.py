@@ -34,7 +34,8 @@ def algorithm_free_one_only_over_isls(
         sat_neighbor_to_if,
         list_gsl_interfaces_info,
         prev_output,
-        enable_verbose_logs
+        enable_verbose_logs,
+		is_last
 ):
     """
     FREE-ONE ONLY OVER INTER-SATELLITE LINKS ALGORITHM
@@ -108,7 +109,8 @@ def algorithm_free_one_only_over_isls(
         ground_station_satellites_in_range,
         sat_neighbor_to_if,
         prev_fstate,
-        enable_verbose_logs
+        enable_verbose_logs,
+		is_last
     )
 
     if enable_verbose_logs:

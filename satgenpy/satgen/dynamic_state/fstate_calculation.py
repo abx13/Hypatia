@@ -13,7 +13,8 @@ def calculate_fstate_shortest_path_without_gs_relaying(
         ground_station_satellites_in_range_candidates,
         sat_neighbor_to_if,
         prev_fstate,
-        enable_verbose_logs
+        enable_verbose_logs,
+        is_last
 ):
 
     # Calculate shortest path distances
@@ -148,96 +149,98 @@ def calculate_fstate_shortest_path_without_gs_relaying(
                             next_hop_decision[2]
                         ))
                     fstate[(src_gs_node_id, dst_gs_node_id)] = next_hop_decision
-
+    if is_last:
+        with open(output_filename+".temp", "w+") as f_out:
+            f_out.write(str(fstate))
     # Finally return result
     return fstate
 
 def calculate_fstate_shortest_path_without_gs_relaying2(
-		output_dynamic_state_dir,
-		time_since_epoch_ns,
-		num_satellites,
-		num_ground_stations,
-		sat_net_graph_only_satellites_with_isls,
-		num_isls_per_sat,
-		gid_to_sat_gsl_if_idx,
-		ground_station_satellites_in_range_candidates,
-		sat_neighbor_to_if,
-		prev_fstate,
-		enable_verbose_logs,
-		is_last
+        output_dynamic_state_dir,
+        time_since_epoch_ns,
+        num_satellites,
+        num_ground_stations,
+        sat_net_graph_only_satellites_with_isls,
+        num_isls_per_sat,
+        gid_to_sat_gsl_if_idx,
+        ground_station_satellites_in_range_candidates,
+        sat_neighbor_to_if,
+        prev_fstate,
+        enable_verbose_logs,
+        is_last
 ):
-	#get the commodity list
+    #get the commodity list
 
-	with open("commodites.temp","r") as fcomm:
-		commodity_list=eval(fcomm.read())
-		if enable_verbose_logs:
-			print('lecture commodites') 
+    with open("commodites.temp","r") as fcomm:
+        commodity_list=eval(fcomm.read())
+        if enable_verbose_logs:
+            print('lecture commodites') 
 
-	# Calculate shortest path distances
-	if enable_verbose_logs:
-		print("  > Calculating mcnf for graph without ground-station relays")
-	# (Note: Numpy has a deprecation warning here because of how networkx uses matrices)
-	total_net_graph=sat_net_graph_only_satellites_with_isls.copy()
-	#add ground stations to graph
-	total_net_graph.add_nodes_from([num_satellites + dst_gid for dst_gid in range(num_ground_stations)])
-	#add possible edges to the graph. 
+    # Calculate shortest path distances
+    if enable_verbose_logs:
+        print("  > Calculating mcnf for graph without ground-station relays")
+    # (Note: Numpy has a deprecation warning here because of how networkx uses matrices)
+    total_net_graph=sat_net_graph_only_satellites_with_isls.copy()
+    #add ground stations to graph
+    total_net_graph.add_nodes_from([num_satellites + dst_gid for dst_gid in range(num_ground_stations)])
+    #add possible edges to the graph. 
 
-	# TODO /!\
-	# the ground station can only be connected to one satellite. 
-	# This will not be a problem here because a ground station only communicates with only one other station.
-	# /!\ 
-	for groundStationId in range(num_ground_stations):
-		if ground_station_satellites_in_range_candidates[groundStationId]:
-			distanceSatGS,satid = sorted(ground_station_satellites_in_range_candidates[groundStationId])[0]
-			total_net_graph.add_edge(satid, num_satellites+groundStationId, weight = 10000000)#distanceSatGS
-		#for distanceSatGS,satid in sorted(ground_station_satellites_in_range_candidates[groundStationId]):
-	    #	total_net_graph.add_edge(satid, num_satellites+groundStationId, weight = 10000000)#distanceSatGS
+    # TODO /!\
+    # the ground station can only be connected to one satellite. 
+    # This will not be a problem here because a ground station only communicates with only one other station.
+    # /!\ 
+    for groundStationId in range(num_ground_stations):
+        if ground_station_satellites_in_range_candidates[groundStationId]:
+            distanceSatGS,satid = sorted(ground_station_satellites_in_range_candidates[groundStationId])[0]
+            total_net_graph.add_edge(satid, num_satellites+groundStationId, weight = 10000000)#distanceSatGS
+        #for distanceSatGS,satid in sorted(ground_station_satellites_in_range_candidates[groundStationId]):
+        #	total_net_graph.add_edge(satid, num_satellites+groundStationId, weight = 10000000)#distanceSatGS
 
-	#compute optimal path
-	list_paths = calcul_paths(total_net_graph, prev_fstate, commodity_list)
-	# Forwarding state : by default, interfaces down and empty routing table
-	fstate = {(cur,dst):(-1,-1,-1) for cur in range(num_satellites+num_ground_stations) for dst in range(num_satellites,num_satellites+num_ground_stations) if cur !=dst}
+    #compute optimal path
+    list_paths = calcul_paths(total_net_graph, prev_fstate, commodity_list)
+    # Forwarding state : by default, interfaces down and empty routing table
+    fstate = {(cur,dst):(-1,-1,-1) for cur in range(num_satellites+num_ground_stations) for dst in range(num_satellites,num_satellites+num_ground_stations) if cur !=dst}
 
-	# Now write state to file for complete graph
-	output_filename = output_dynamic_state_dir + "/fstate_" + str(time_since_epoch_ns) + ".txt"
-	if enable_verbose_logs:
-		print("  > Writing forwarding state to: " + output_filename)
-	
-	for i,path in enumerate(list_paths):
-			if path:
-				#src ground station to first sat
-				src_id = path[0]
-				dst_gs_node_id = path[-1]
-				next_hop_decision=(path[1], 0, num_isls_per_sat[path[1]] + gid_to_sat_gsl_if_idx[src_id-num_satellites])
-				fstate[(src_id, dst_gs_node_id)] = next_hop_decision
-				
-				#last sat to dst ground station
-				next_hop_decision = (dst_gs_node_id,num_isls_per_sat[path[-2]] + gid_to_sat_gsl_if_idx[dst_gs_node_id-num_satellites],0)
-				fstate[(path[-2], dst_gs_node_id)] = next_hop_decision
-				
-				#interfaces between satellites
-				for k in range(1,len(path)-2):
-					curr,neighbor_id=path[k],path[k+1]
-					next_hop_decision = (neighbor_id,sat_neighbor_to_if[(curr, neighbor_id)],sat_neighbor_to_if[(neighbor_id, curr)])
-					fstate[(curr, dst_gs_node_id)] = next_hop_decision
-	
-	with open(output_filename, "w+") as f_out:
-		for cle in fstate:
-			if not prev_fstate or cle not in prev_fstate or prev_fstate[cle] != fstate[cle]:
-					f_out.write("{},{},{},{},{}\n".format(*cle, *fstate[cle]))
-					if cle in [(431,381), (343,381), (5,381), (6,381)]:
-						print(output_filename, "ecriture fstate",cle,fstate[cle])
-			elif cle in [(431,381), (343,381), (5,381), (6,381)]:
-				print(output_filename, "fstate non ecrit ", cle, fstate[cle], not prev_fstate, cle not in prev_fstate, prev_fstate[cle] != fstate[cle])
-	if is_last:
-		with open(output_filename+".temp", "w+") as f_out:
-			f_out.write(str(fstate))
-			
-				
-				
+    # Now write state to file for complete graph
+    output_filename = output_dynamic_state_dir + "/fstate_" + str(time_since_epoch_ns) + ".txt"
+    if enable_verbose_logs:
+        print("  > Writing forwarding state to: " + output_filename)
+    
+    for i,path in enumerate(list_paths):
+            if path:
+                #src ground station to first sat
+                src_id = path[0]
+                dst_gs_node_id = path[-1]
+                next_hop_decision=(path[1], 0, num_isls_per_sat[path[1]] + gid_to_sat_gsl_if_idx[src_id-num_satellites])
+                fstate[(src_id, dst_gs_node_id)] = next_hop_decision
+                
+                #last sat to dst ground station
+                next_hop_decision = (dst_gs_node_id,num_isls_per_sat[path[-2]] + gid_to_sat_gsl_if_idx[dst_gs_node_id-num_satellites],0)
+                fstate[(path[-2], dst_gs_node_id)] = next_hop_decision
+                
+                #interfaces between satellites
+                for k in range(1,len(path)-2):
+                    curr,neighbor_id=path[k],path[k+1]
+                    next_hop_decision = (neighbor_id,sat_neighbor_to_if[(curr, neighbor_id)],sat_neighbor_to_if[(neighbor_id, curr)])
+                    fstate[(curr, dst_gs_node_id)] = next_hop_decision
+    
+    with open(output_filename, "w+") as f_out:
+        for cle in fstate:
+            if not prev_fstate or cle not in prev_fstate or prev_fstate[cle] != fstate[cle]:
+                    f_out.write("{},{},{},{},{}\n".format(*cle, *fstate[cle]))
+                    if cle in [(431,381), (343,381), (5,381), (6,381)]:
+                        print(output_filename, "ecriture fstate",cle,fstate[cle])
+            elif cle in [(431,381), (343,381), (5,381), (6,381)]:
+                print(output_filename, "fstate non ecrit ", cle, fstate[cle], not prev_fstate, cle not in prev_fstate, prev_fstate[cle] != fstate[cle])
+    if is_last:
+        with open(output_filename+".temp", "w+") as f_out:
+            f_out.write(str(fstate))
+            
+                
+                
 
-	# Finally return result
-	return fstate
+    # Finally return result
+    return fstate
 
 def calculate_fstate_shortest_path_with_gs_relaying(
         output_dynamic_state_dir,

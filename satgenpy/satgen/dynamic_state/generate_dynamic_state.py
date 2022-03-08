@@ -58,6 +58,7 @@ def generate_dynamic_state(
     prev_output = None
     i = 0
     total_iterations = ((simulation_end_time_ns - offset_ns) / time_step_ns)
+    is_last=False
     for time_since_epoch_ns in range(offset_ns, simulation_end_time_ns, time_step_ns):
         if not enable_verbose_logs:
             if i % int(math.floor(total_iterations) / 10.0) == 0:
@@ -245,7 +246,8 @@ def generate_dynamic_state_at(
             sat_neighbor_to_if,
             list_gsl_interfaces_info,
             prev_output,
-            enable_verbose_logs
+            enable_verbose_logs,
+			is_last
         )
     
     elif dynamic_state_algorithm == "algorithm_free_one_only_over_isls2":

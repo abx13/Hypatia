@@ -144,7 +144,7 @@ def help_dynamic_state(
     pool.join()
 
     # mix up last computed of thread i and first computed of thread i+1
-    for current_epoch in range(num_threads-1):
+    for current_epoch in range(num_calculations-1):
         output_filename1 = output_dynamic_state_dir + "/fstate_" + str(current_epoch * time_step_ns) + ".txt.temp"
         with open(output_filename1,"r") as f1:
             fstate_i = eval(f1.readline())
@@ -163,5 +163,5 @@ def help_dynamic_state(
             for cle in fstate_ip1:
                 f.write("{},{},{},{},{}\n".format(*cle, *fstate_ip1[cle]))
         os.remove(output_filename1)
-    os.remove(output_dynamic_state_dir + "/fstate_" + str((num_threads-1) * time_step_ns) + ".txt.temp")
+    os.remove(output_dynamic_state_dir + "/fstate_" + str((num_calculations-1) * time_step_ns) + ".txt.temp")
     
