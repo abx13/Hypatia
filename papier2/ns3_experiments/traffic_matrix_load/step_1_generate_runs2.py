@@ -26,9 +26,9 @@ import random
 import sys
 local_shell = exputil.LocalShell()
 
-local_shell.remove_force_recursive("runs")
-local_shell.remove_force_recursive("pdf")
-local_shell.remove_force_recursive("data")
+#local_shell.remove_force_recursive("runs")
+#local_shell.remove_force_recursive("pdf")
+#local_shell.remove_force_recursive("data")
 
 # Schedule
 #to get back to old code , put following lines at "schedule was here !!"
@@ -50,10 +50,10 @@ else:
 list_from_to = networkload.generate_from_to_reciprocated_random_pairing(list(a), seed_from_to)
 #list_from_to = list_from_to[0:max(10,len(list_from_to))]
 
-reference_rate = 0.02 # rate in Mb/s
+reference_rate = 1 # target sending rate in Mb/s
 list_proportion  =[random.choice(range(70,130))/100 for _ in range(len(list_from_to))]
-tcp_list_flow_size_byte=[10000000 * elt for elt in list_proportion]#tcp : send a fixed size quantity
-udp_list_flow_size_proportion=[elt*reference_rate for elt in list_proportion]#udp : rate relative to the rate given by config below. initially was always 1.
+tcp_list_flow_size_byte=[int(elt*reference_rate*int(params[1])*(1e6/8)) for elt in list_proportion]#tcp : sending rate * randomization * simu_duration * coeff_Mb_to_bytes
+udp_list_flow_size_proportion=[elt*reference_rate for elt in list_proportion]#udp : sending rate * randomization, in Mb/s
 
 
 for config in [
@@ -83,7 +83,7 @@ for config in [
     duration_s = config[1]
 
     # Both protocols
-    for protocol_chosen in ["udp"]:#["tcp", "udp"]:
+    for protocol_chosen in ["tcp", "udp"]:
 
         # TCP NewReno needs at least the BDP in queue size to fulfill bandwidth
         if protocol_chosen == "tcp":
@@ -115,7 +115,7 @@ for config in [
             )
             
             local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties",
-                                              "[SAT-NET-DIR]", sat_net_dir:="../../../../satellite_networks_state/gen_data/{}_{}_{}_{}".format(params[0].lstrip('main_0').rstrip('.py'),params[3],params[4],params[5]))
+                                              "[SAT-NET-DIR]", sat_net_dir:="../../../../satellite_networks_state/gen_data/{}_{}_{}_{}".format(params[0].lstrip('main_').rstrip('.py'),params[3],params[4],params[5]))
             local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties",
                                               "[SAT-NET-ROUTES-DIR]", sat_net_dir+"/dynamic_state_{}ms_for_{}s".format(params[2],params[1]))
             local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties",
@@ -162,14 +162,14 @@ for config in [
                             i,
                             list_from_to[i][0],
                             list_from_to[i][1],
-                            data_rate_megabit_per_s*udp_list_flow_size_proportion[i],
+                            udp_list_flow_size_proportion[i],
                             0,
                             1000000000000
                         )
                     )
 
 #write the commodity list in an accessible place for path generation
-local_shell.write_file("../../satellite_networks_state/commodites.temp", list(zip([elt[0] for elt in list_from_to],[elt[1] for elt in list_from_to],list_proportion)))
+local_shell.write_file("../../satellite_networks_state/commodites.temp", list(zip([elt[0] for elt in list_from_to],[elt[1] for elt in list_from_to],udp_list_flow_size_proportion)))
 
 #generate network graph
 

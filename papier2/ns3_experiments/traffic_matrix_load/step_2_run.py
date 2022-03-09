@@ -25,7 +25,7 @@ import sys
 local_shell = exputil.LocalShell()
 
 # Clear old runs
-local_shell.perfect_exec("rm -rf runs/*/logs_ns3")
+#local_shell.perfect_exec("rm -rf runs/*/logs_ns3")
 
 # Get workload identifier from argument
 num_machines = 1
@@ -41,7 +41,7 @@ unique_id = 0
 data_rate_megabit_per_s = float(args[1])
 duration_s = float(args[2])
 
-for protocol_chosen in ["udp"]:#["tcp", "udp"]:
+for protocol_chosen in ["tcp", "udp"]:
 
 	if (unique_id % num_machines) == workload_id:
 

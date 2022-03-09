@@ -22,6 +22,7 @@
 
 import exputil
 import numpy as np
+import os
 
 local_shell = exputil.LocalShell()
 
@@ -35,29 +36,14 @@ with open("data/traffic_goodput_total_data_sent_vs_runtime.csv", "w+") \
      open("data/run_dirs.csv", "w+") \
      as f_out_run_dirs:
 
-	for protocol_chosen in ["tcp", "udp"]:
-		for run_dir_details in [
-			("runs/run_loaded_tm_pairing_1_Mbps_for_10s_with_" + protocol_chosen, 10.0),
-			("runs/run_loaded_tm_pairing_1_Mbps_for_20s_with_" + protocol_chosen, 20.0),
-			("runs/run_loaded_tm_pairing_1_Mbps_for_50s_with_" + protocol_chosen, 50.0),
-			("runs/run_loaded_tm_pairing_10_Mbps_for_10s_with_" + protocol_chosen, 10.0),
-			("runs/run_loaded_tm_pairing_10_Mbps_for_20s_with_" + protocol_chosen, 20.0),
-			("runs/run_loaded_tm_pairing_10_Mbps_for_50s_with_" + protocol_chosen, 50.0),
-			("runs/run_loaded_tm_pairing_25_Mbps_for_10s_with_" + protocol_chosen, 10.0),
-			("runs/run_loaded_tm_pairing_25_Mbps_for_20s_with_" + protocol_chosen, 20.0),
-			("runs/run_loaded_tm_pairing_25_Mbps_for_50s_with_" + protocol_chosen, 50.0),
-			("runs/run_loaded_tm_pairing_100_Mbps_for_10s_with_" + protocol_chosen, 10.0),
-			("runs/run_loaded_tm_pairing_100_Mbps_for_20s_with_" + protocol_chosen, 20.0),
-			("runs/run_loaded_tm_pairing_250_Mbps_for_10s_with_" + protocol_chosen, 10.0),
-			("runs/run_loaded_tm_pairing_250_Mbps_for_20s_with_" + protocol_chosen, 20.0),
-			("runs/run_loaded_tm_pairing_1000_Mbps_for_10s_with_" + protocol_chosen, 10.0),
-			("runs/run_loaded_tm_pairing_2500_Mbps_for_10s_with_" + protocol_chosen, 10.0),
-			("runs/run_loaded_tm_pairing_10000_Mbps_for_1s_with_" + protocol_chosen, 1.0),
-			("runs/run_loaded_tm_pairing_10000_Mbps_for_2s_with_" + protocol_chosen, 2.0),
-		]:
+	for protocol_chosen in ["tcp","udp"]:
+		for run_dir_details in (run_dirs:=["runs/"+fic for fic in os.listdir("runs") if os.path.isdir("runs/"+fic) and protocol_chosen in fic]):
+			#("runs/run_loaded_tm_pairing_10_Mbps_for_10s_with_"+protocol_chosen+"_algorithm_free_one_only_over_isls", 10.0),
+			
 			# Determine run directory
-			run_dir = run_dir_details[0]
-			duration_s = run_dir_details[1]
+			run_dir = run_dir_details
+			print("runDir",run_dir)
+			duration_s = float(run_dir_details.split("Mbps_for_")[1].split("s_with_")[0])#get simulation duration
 			logs_ns3_dir = run_dir + "/logs_ns3"
 
 			# Finished filename to check if done
