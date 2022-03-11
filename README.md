@@ -82,6 +82,8 @@ BibTeX citation:
 5. The reproduction of the paper is essentially the tutorial for Hypatia.
    Please navigate to `paper/README.md`.
 
+6. Refer to `paper2/README.md` to compare shortest path and mcnf algorithm.
+
 ### Visualizations
 Most of the visualizations in the paper are available [here](https://leosatsim.github.io/).
 All of the visualizations can be regenerated using scripts available in `satviz` as discussed above.

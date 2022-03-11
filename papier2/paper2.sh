@@ -21,17 +21,21 @@
 # SOFTWARE.
   
 
+#### README ##############################
+# liste_arguments : constellation_file duration[s] timestep[ms] isls? Ground_stations? algorithm number_of_threads
+# constellation_file : choose main_telesat_1015.py or main_kuiper_630.py . Edit other constellations in ./satellite_network_state and configure ./ns3_experiments/traffic_matrix_load/step_1_generate_runs2
+# duration : any int 
+# timestep : any int
+# isls : only "isls_plus_grid" was used
+# GS : use ground_stations_top_100 or adapt ./ns3_experiments/traffic_matrix_load/step_1_generate_runs2 and other files
+# algorithm : algorithm_free_one_only_over_isls (shortest path) or algorithm_free_one_only_over_isls2 (mcnf)
+# threads number : adapt it to your computer
+# 
+##########################################
 
-# liste_arguments : constellation_file duration[s] timestep[ms] isls? grid? algorithm number_of_threads
-
-#liste_arguments=("main_telesat_1015.py 10 5000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
-#		"main_telesat_1015.py 10 5000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4" \
-#		"main_telesat_1015.py 20 500 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
-#		"main_telesat_1015.py 20 500 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4")
-#liste_debitISL=("10" "10" "10" "10") #Mb/s
 liste_arguments=("main_telesat_1015.py 21 1000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
 			"main_telesat_1015.py 21 1000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4")
-liste_debitISL=("2.5" "2.5")
+liste_debitISL=("2.5" "2.5") #Mb/s
 
 for ((i=0; i<${#liste_arguments[@]}; ++i )) ; do
 	debitISL="${liste_debitISL[$i]}"

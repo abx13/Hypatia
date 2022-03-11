@@ -45,7 +45,7 @@ elif "kuiper_630" in params[0] and "100" in params[4]:
 elif "telesat_1015" in params[0] and "100" in params[4]:
     a = set(range(351,451))
 else:
-    print("erreur parametres non reconnus, editer ce fichier et generate_for_paper")
+    print("erreur parametres non reconnus, editer step_1_generate_runs2 et/ou generate_for_paper")
     exit(1)
 list_from_to = networkload.generate_from_to_reciprocated_random_pairing(list(a), seed_from_to)
 #list_from_to = list_from_to[0:max(10,len(list_from_to))]
@@ -122,7 +122,7 @@ for config in [
                                               "[DYN-FSTATE-INTERVAL-UPDATE-MS]", str(params[2]))
                                               
         else:
-            print("\nconfig_ns3 error, check config_ns3.properties\n")
+            print("\n incorrect parameters in step1_generate_runs2, edit generated config_ns3.properties\n")
             exit(1)
         
         local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties",
