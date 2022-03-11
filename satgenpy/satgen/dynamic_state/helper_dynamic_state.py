@@ -156,7 +156,7 @@ def help_dynamic_state(
             table_routage = eval(texte)
             fstate_ip1 = {(elt[0],elt[1]): elt[2:] for elt in table_routage}
         for cle in fstate_i:
-            if fstate_ip1[cle]==fstate_i[cle]:
+            if fstate_ip1[cle]==fstate_i[cle] or fstate_ip1[cle]==(-1,-1,-1):
                 del fstate_ip1[cle]
         with open(output_filename2,"w") as f:
             for cle in fstate_ip1:

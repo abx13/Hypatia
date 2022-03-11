@@ -23,6 +23,7 @@
 import exputil
 import time
 import sys
+import os
 
 local_shell = exputil.LocalShell()
 max_num_processes = 6
@@ -34,9 +35,11 @@ if local_shell.count_screens() != 0:
     exit(1)
 
 # Re-create data directory
-local_shell.remove_force_recursive("data")
-local_shell.make_full_dir("data")
-local_shell.make_full_dir("data/command_logs")
+#local_shell.remove_force_recursive("data")
+if not "data" in [obj for obj in os.listdir('.') if os.path.isdir(obj)]:
+	local_shell.make_full_dir("data")
+if not "command_logs" in [obj for obj in os.listdir('data') if os.path.isdir(obj)]:
+	local_shell.make_full_dir("data/command_logs")
 
 # Where to store all commands
 commands_to_run = []
@@ -89,74 +92,14 @@ else:
 		                   " 5000 20 372 411 "
 		                   "> ../papier2/satgenpy_analysis/data/command_logs/manual_graphical_telesat_isls_372_to_411.log 2>&1")
 
-	#New-York-Newark to Toronto with only ISLs on Telesat 
-	commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
-		                   "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
-		                   "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
-		                   "5000 20 360 407"
-		                   "> ../papier2/satgenpy_analysis/data/command_logs/manual_telesat_isls_360_to_407.log 2>&1")
-	commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_graphical_routes_and_rtt "
-		                   "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
-		                   "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
-		                   "5000 20 360 407"
-		                   "> ../papier2/satgenpy_analysis/data/command_logs/manual_graphical_telesat_isls_360_to_407.log 2>&1")
-
-	#Ankara to Chengdu with only ISLs on Telesat 
-	commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
-		                   "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
-		                   "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
-		                   "5000 20 430 392 "
-		                   "> ../papier2/satgenpy_analysis/data/command_logs/manual_telesat_isls_430_to_392.log 2>&1")
-	commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_graphical_routes_and_rtt "
-		                   "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
-		                   "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
-		                   "5000 20 430 392 "
-		                   "> ../papier2/satgenpy_analysis/data/command_logs/manual_graphical_telesat_isls_430_to_392.log 2>&1")
-
-	#Paris to Boston with only ISLs on Telesat 
-	commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
-		                   "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
-		                   "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
-		                   "5000 20 375 439 "
-		                   "> ../papier2/satgenpy_analysis/data/command_logs/manual_telesat_isls_375_to_439.log 2>&1")
-	commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_graphical_routes_and_rtt "
-		                   "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
-		                   "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
-		                   "5000 20 375 439 "
-		                   "> ../papier2/satgenpy_analysis/data/command_logs/manual_graphical_telesat_isls_375_to_439.log 2>&1")
-
-	# Barcelona to Chittagong with only ISLs on Telesat
-	commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
-		                   "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
-		                   "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
-		                   "5000 20 420 433 "
-		                   "> ../papier2/satgenpy_analysis/data/command_logs/manual_telesat_isls_420_to_433.log 2>&1")
-	commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_graphical_routes_and_rtt "
-		                   "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
-		                   "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
-		                   "5000 20 420 433 "
-		                   "> ../papier2/satgenpy_analysis/data/command_logs/manual_graphical_telesat_isls_420_to_433.log 2>&1")
-
-	# Santiago to Bangalore with only ISLs on Telesat
-	commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_routes_and_rtt "
-		                   "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
-		                   "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
-		                   "5000 20 401 379 "
-		                   "> ../papier2/satgenpy_analysis/data/command_logs/manual_telesat_isls_401_to_379.log 2>&1")
-	commands_to_run.append("cd ../../satgenpy; python -m satgen.post_analysis.main_print_graphical_routes_and_rtt "
-		                   "../papier2/satgenpy_analysis/data ../papier2/satellite_networks_state/gen_data/"
-		                   "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2 "
-		                   "5000 20 401 379 "
-		                   "> ../papier2/satgenpy_analysis/data/command_logs/manual_graphical_telesat_isls_401_to_379.log 2>&1")
-
 # Constellation comparison
 print("Generating commands for constellation comparison...")
 for satgenpy_generated_constellation in [
 	"telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls",
     "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2"
 ]:
-    for duration_s in [10,20]:
-        list_update_interval_ms = [5000]
+    for duration_s in [21]:
+        list_update_interval_ms = [1000]
 
         # Path
         for update_interval_ms in list_update_interval_ms:

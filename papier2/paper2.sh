@@ -20,20 +20,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
   
-### SATELLITE NETWORKS STATE
 
-# fait dans generate_runs2 de NS-3 experiments
 
-		
+# liste_arguments : constellation_file duration[s] timestep[ms] isls? grid? algorithm number_of_threads
+
 #liste_arguments=("main_telesat_1015.py 10 5000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
 #		"main_telesat_1015.py 10 5000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4" \
 #		"main_telesat_1015.py 20 500 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
 #		"main_telesat_1015.py 20 500 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4")
 #liste_debitISL=("10" "10" "10" "10") #Mb/s
-liste_arguments=("main_telesat_1015.py 30 500 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
-			"main_telesat_1015.py 30 500 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4")
-liste_debitISL=("4" "4")
-### NS-3 EXPERIMENTS
+liste_arguments=("main_telesat_1015.py 21 1000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
+			"main_telesat_1015.py 21 1000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4")
+liste_debitISL=("2.5" "2.5")
+
 for ((i=0; i<${#liste_arguments[@]}; ++i )) ; do
 	debitISL="${liste_debitISL[$i]}"
 	read -a arguments <<< "${liste_arguments[$i]}"
@@ -44,9 +43,10 @@ for ((i=0; i<${#liste_arguments[@]}; ++i )) ; do
 	python step_1_generate_runs2.py $debitISL ${arguments[*]} || exit 1
 	cd ../.. || exit 1
 
-	#intermède
 	### SATGENPY ANALYSIS
-	# Satgenpy analysis
+	# analysis  of path and rtt based on networkx. edit
+	#  variables 'satgenpy_generated_constellation', 'duration_s' 
+	# and 'list_update_interval_ms' in perform_full_analysis
 	cd satgenpy_analysis || exit 1
 	python perform_full_analysis.py ${arguments[*]} || exit 1
 	cd .. || exit 1
@@ -59,7 +59,7 @@ for ((i=0; i<${#liste_arguments[@]}; ++i )) ; do
 	cd .. || exit 1
 
 	## Figures
-	#not for matrix_load
+	#not used in matrix_load
 	#cd figures || exit 1
 	#python plot_all.py || exit 1
 	#python generate_pngs.py || exit 1

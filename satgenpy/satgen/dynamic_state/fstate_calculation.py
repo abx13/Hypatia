@@ -206,7 +206,10 @@ def calculate_fstate_shortest_path_without_gs_relaying2(
     #compute optimal path
     list_paths = calcul_paths(total_net_graph, prev_fstate, commodity_list, debitISL)
     # Forwarding state : by default, interfaces down and empty routing table
-    fstate = {(cur,dst):(-1,-1,-1) for cur in range(num_satellites+num_ground_stations) for dst in range(num_satellites,num_satellites+num_ground_stations) if cur !=dst}
+    if prev_fstate:
+        fstate=prev_fstate.copy()
+    else:
+        fstate = {(cur,dst):(-1,-1,-1) for cur in range(num_satellites+num_ground_stations) for dst in range(num_satellites,num_satellites+num_ground_stations) if cur !=dst}
 
     # Now write state to file for complete graph
     output_filename = output_dynamic_state_dir + "/fstate_" + str(time_since_epoch_ns) + ".txt"

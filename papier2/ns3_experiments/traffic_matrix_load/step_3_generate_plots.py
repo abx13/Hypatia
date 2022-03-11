@@ -38,12 +38,10 @@ with open("data/traffic_goodput_total_data_sent_vs_runtime.csv", "w+") \
 
 	for protocol_chosen in ["tcp","udp"]:
 		for run_dir_details in (run_dirs:=["runs/"+fic for fic in os.listdir("runs") if os.path.isdir("runs/"+fic) and protocol_chosen in fic]):
-			#("runs/run_loaded_tm_pairing_10_Mbps_for_10s_with_"+protocol_chosen+"_algorithm_free_one_only_over_isls", 10.0),
 			
-			# Determine run directory
 			run_dir = run_dir_details
-			print("runDir",run_dir)
-			duration_s = float(run_dir_details.split("Mbps_for_")[1].split("s_with_")[0])#get simulation duration
+			#get simulation duration from directory name
+			duration_s = float(run_dir_details.split("Mbps_for_")[1].split("s_with_")[0])
 			logs_ns3_dir = run_dir + "/logs_ns3"
 
 			# Finished filename to check if done
