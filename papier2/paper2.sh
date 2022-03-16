@@ -33,9 +33,9 @@
 # 
 ##########################################
 
-liste_arguments=("main_telesat_1015.py 21 1000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
-			"main_telesat_1015.py 21 1000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4")
-liste_debitISL=("2.5" "2.5") #Mb/s
+liste_arguments=("main_telesat_1015.py 22 500 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
+		"main_telesat_1015.py 22 500 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4")
+liste_debitISL=("20" "20") #Mb/s
 
 for ((i=0; i<${#liste_arguments[@]}; ++i )) ; do
 	debitISL="${liste_debitISL[$i]}"

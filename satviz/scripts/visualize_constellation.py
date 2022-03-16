@@ -46,7 +46,7 @@ EPOCH = "2000-01-01 00:00:00"
 COLOR = ['CRIMSON', 'FORESTGREEN', 'DODGERBLUE', 'PERU', 'BLUEVIOLET', 'DARKMAGENTA']
 # CONSTELLATION SPECIFIC PARAMETERS
 
-
+"""
 # STARLINK
 NAME = "Starlink"
 
@@ -129,7 +129,7 @@ NUM_SATS_PER_ORB[1] = 33
 INCLINATION_DEGREE[1] = 50.88
 BASE_ID[1] = 351
 ORB_WISE_IDS[1] = []
-"""
+#"""
 
 """
 # KUIPER
@@ -248,5 +248,5 @@ def write_viz_files():
     writer_html.close()
 
 
-viz_string = generate_satelite_trajectories()
+viz_string = generate_satellite_trajectories()
 write_viz_files()

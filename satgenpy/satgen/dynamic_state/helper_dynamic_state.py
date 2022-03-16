@@ -137,10 +137,13 @@ def help_dynamic_state(
         current += num_time_steps
 
     # Run in parallel
-    pool = ThreadPool(num_threads)
-    pool.map(worker, list_args)
-    pool.close()
-    pool.join()
+    #pool = ThreadPool(num_threads)
+    #pool.map(worker, list_args)
+    #pool.close()
+    #pool.join()
+    # or run sequentially
+    for args in list_args:
+        worker(args)
 
     # mix up last computed of thread i and first computed of thread i+1
     for current_epoch in range(num_calculations-1):

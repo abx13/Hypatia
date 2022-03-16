@@ -50,7 +50,7 @@ else:
 list_from_to = networkload.generate_from_to_reciprocated_random_pairing(list(a), seed_from_to)
 #list_from_to = list_from_to[0:max(10,len(list_from_to))]
 
-reference_rate = 1 # target sending rate in Mb/s
+reference_rate = 10 # target sending rate in Mb/s
 list_proportion  =[random.choice(range(70,130))/100 for _ in range(len(list_from_to))]
 tcp_list_flow_size_byte=[int(elt*reference_rate*int(params[1])*(1e6/8)) for elt in list_proportion]#tcp : sending rate * randomization * simu_duration * coeff_Mb_to_bytes
 udp_list_flow_size_proportion=[elt*reference_rate for elt in list_proportion]#udp : sending rate * randomization, in Mb/s

@@ -79,16 +79,28 @@ NUM_SATS_PER_ORB = 34
 INCLINATION_DEGREE = 51.9
 
 
+# TELESAT 1015
+NAME = "telesat_1015"
+
+MEAN_MOTION_REV_PER_DAY = 13.66  # Altitude ~1015 km
+ALTITUDE_M = 1015000  # Altitude ~1015 km
+SATELLITE_CONE_RADIUS_M = ALTITUDE_M / math.tan(math.radians(10.0))  # According to paper, could theoretically reach 10
+MAX_GSL_LENGTH_M = math.sqrt(math.pow(SATELLITE_CONE_RADIUS_M, 2) + math.pow(ALTITUDE_M, 2))
+MAX_ISL_LENGTH_M = 2 * math.sqrt(math.pow(EARTH_RADIUS + ALTITUDE_M, 2) - math.pow(EARTH_RADIUS + 80000, 2))  # ISLs are not allowed to dip below 80 km altitude in order to avoid weather conditions
+NUM_ORBS = 27
+NUM_SATS_PER_ORB = 13
+INCLINATION_DEGREE = 98.98
+
 # General files needed to generate visualizations; Do not change for different simulations
 topFile = "../static_html/top.html"
 bottomFile = "../static_html/bottom.html"
 city_detail_file = "../../paper/satellite_networks_state/input_data/ground_stations_cities_sorted_by_estimated_2025_pop_top_1000.basic.txt"
 
 # Time in ms for which visualization will be generated
-GEN_TIME=100000  #ms
+GEN_TIME=5000  #ms
 
 # Input utilization data file; Generated during simulation
-IN_UTIL_FILE = "../../paper/ns3_experiments/traffic_matrix/runs/run_general_tm_pairing_kuiper_isls_moving/logs_ns3/isl_utilization.csv"
+IN_UTIL_FILE = "../../papier2/ns3_experiments/traffic_matrix_load/runs/run_loaded_tm_pairing_4_Mbps_for_21s_with_udp_algorithm_free_one_only_over_isls2/logs_ns3/isl_utilization.csv"
 
 # Output directory for creating visualization html files
 OUT_DIR = "../viz_output/"

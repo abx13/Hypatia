@@ -108,7 +108,7 @@ GEN_TIME=10000  #ms
 # City IDs are available in the city_detail_file.
 # If city ID is X (for Paris X = 24) and constellation is Starlink_550 (1584 satellites),
 # then offset ID is 1584 + 24 = 1608.
-path_file = "../../papier2_backup/satgenpy_analysis/data/telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2/5000ms_for_20s/manual/data/networkx_path_372_to_411.txt"
+path_file = "../../papier2/satgenpy_analysis/data/telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls/5000ms_for_10s/manual/data/networkx_path_372_to_411.txt"
 
 # Output directory for creating visualization html files
 OUT_DIR = "../viz_output/"
