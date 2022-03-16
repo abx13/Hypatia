@@ -23,7 +23,7 @@
 from .fstate_calculation import *
 
 
-def algorithm_free_one_only_over_isls2(
+def algorithm_free_one_only_over_isls2b(
         output_dynamic_state_dir,
         time_since_epoch_ns,
         satellites,
@@ -57,6 +57,7 @@ def algorithm_free_one_only_over_isls2(
 	"2"
 	path computation is based on commodities. The multicommodities network flow algorithm minimizes
 	links overflow
+	"b" : other version, trying to select shorter paths
     """
 
     if enable_verbose_logs:
@@ -114,8 +115,8 @@ def algorithm_free_one_only_over_isls2(
         prev_fstate,
         enable_verbose_logs,
 		is_last,
-		'a'
-    ) #initial SRR_arc_node from François
+		'b'
+    )#other version of François algo
 
     if enable_verbose_logs:
         print("")

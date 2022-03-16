@@ -1,3 +1,4 @@
+""" avant tout, utiliser depointe dans module.py lancer pointe après utilisation"""
 from .interface import *
 import networkx as nx
 
@@ -56,17 +57,18 @@ def testgraphs(num_satellites,num_ground_stations):
 def test_interface():
 	if __name__!="__main__":
 		return
-
-	num_satellites=10
-	num_ground_stations=3
-	commodites=[(x,(x+1)%num_ground_stations, 0.5*(x+1)) for x in range(num_satellites,num_satellites+num_ground_stations)]
+	
+	num_satellites=30
+	num_ground_stations=20
+	commodites=[((x+3)%num_ground_stations,(x+1)%num_ground_stations, 0.5*(x+1)) for x in range(num_satellites,num_satellites+num_ground_stations)]
 
 	sat_net_graph_complete, sat_neighbor_to_if,num_isls_per_sat,gid_to_sat_gsl_if_idx,num_ground_stations = testgraphs(num_satellites,num_ground_stations)
 
-	results_list=calcul_paths(sat_net_graph_complete,prev_fstate:={},commodites)
+	results_list=calcul_paths(sat_net_graph_complete,prev_fstate:={},commodites,1000000000)
 	#results_list = SRR_arc_node_one_timestep(graph, commodites, init_path)
 	print(results_list)
 
 #init_path=[[] for _ in range(len(commodites))]
 #prev_fstate=sol2fstate(init_path,sat_neighbor_to_if,num_isls_per_sat,gid_to_sat_gsl_if_idx,num_ground_stations)
 #calcul_paths(graph,prev_fstate,commodity_list)
+test_interface()

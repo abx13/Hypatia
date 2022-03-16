@@ -282,7 +282,7 @@ def arc_node_one_timestep_model(graph, commodity_list, initial_path_list, allowe
         print("Flow conservation constraints created")
 
     # Capacity constraints
-    capacity_constraint_dict = model.addConstrs((flow_var.sum('*', node, neighbor) - overload_var[node, neighbor] <= graph[node][neighbor] for node, neighbor in arc_list), "capacity")
+    capacity_constraint_dict = model.addConstrs((flow_var.sum('*', node, neighbor) - overload_var[node, neighbor] <= graph[node][neighbor][0] for node, neighbor in arc_list), "capacity")
     total_capacity_constraint = model.addConstr((overload_var.sum() - total_overload_var <= allowed_overflow), "capacity_tot")
     if verbose:
         print("Capacity constraints created")
@@ -301,7 +301,7 @@ def extract_allocation_from_model(model, graph, capacity_constraint_dict, flow_v
     for origin, node, neighbor in flow_values:
         if origin not in allocation_graph_per_origin:
             allocation_graph_per_origin[origin] = [{} for node in range(nb_nodes)]
-        allocation_graph_per_origin[origin][node][neighbor] = flow_values[origin, node, neighbor]
+        allocation_graph_per_origin[origin][node][neighbor] = [flow_values[origin, node, neighbor],graph[node][neighbor][1]]
 
     initial_path_values = model.getAttr('x', initial_path_var)
 
@@ -312,7 +312,7 @@ def extract_allocation_from_model(model, graph, capacity_constraint_dict, flow_v
 
         for node_index in range(len(initial_path)-1):
             node, neighbor = initial_path[node_index], initial_path[node_index + 1]
-            allocation_graph_per_origin[origin][node][neighbor] -= demand * value
+            allocation_graph_per_origin[origin][node][neighbor][0] -= demand * value
 
     return allocation_graph_per_origin, remaining_capacity_graph, initial_path_values
 

@@ -31,7 +31,44 @@ def find_fitting_most_capacited_path(graph1, graph2, origin, destination, minimu
 
             for neighbor in graph1[current_node]:
                 if not visited[neighbor] and graph2[current_node][neighbor] >= minimum_capacity:
-                    hp.heappush(priority_q, (-min(capa_of_current_node, graph1[current_node][neighbor]), neighbor, current_node))
+                    hp.heappush(priority_q, (-min(capa_of_current_node, graph1[current_node][neighbor][0]), neighbor, current_node))
+
+    if parent_list[destination] is None:
+        return None, None
+
+    path = [destination]
+    current_node = destination
+    while current_node != origin:
+        current_node = parent_list[current_node]
+        path.append(current_node)
+    path.reverse()
+
+    return path, best_capacity[destination]
+
+def find_fitting_shortest_path(graph1, graph2, origin, destination, minimum_capacity):
+    # this is a dijkstra like algorithm that computes the shortest path with enough capacity from the origin to the destination
+    # the edge distances come from graph1 in 2nd position, and only edges with capacities >= minimum_capacity in graph2 are taken into account
+    priority_q = [(0, -10.**10, origin, None)]
+
+    parent_list = [None] * len(graph1)
+    visited = [False]*len(graph1)
+    best_capacity = [None] * len(graph1)
+
+    while priority_q != []:
+        distance, c, current_node, parent_node = hp.heappop(priority_q)
+        capa_of_current_node = -c
+
+        if not visited[current_node]:
+            visited[current_node] = True
+            parent_list[current_node] = parent_node
+            best_capacity[current_node] = capa_of_current_node
+
+            if current_node == destination:
+                break
+
+            for neighbor in graph1[current_node]:
+                if not visited[neighbor] and graph2[current_node][neighbor] >= minimum_capacity:
+                    hp.heappush(priority_q, (graph1[current_node][neighbor][1]+distance, -min(capa_of_current_node, graph1[current_node][neighbor][0]), neighbor, current_node))
 
     if parent_list[destination] is None:
         return None, None
@@ -58,10 +95,14 @@ def update_graph_capacity(graph, path, demand, reverse_graph=False):
 
         if reverse_graph:
             node, neighbor = neighbor, node
-
-        old_overload = - min(0, graph[node][neighbor])
-        graph[node][neighbor] -= demand
-        new_overload += - min(0, graph[node][neighbor]) - old_overload
+        if type(graph[node][neighbor]) is list:
+            old_overload = - min(0, graph[node][neighbor][0])
+            graph[node][neighbor][0] -= demand
+            new_overload += - min(0, graph[node][neighbor][0]) - old_overload
+        else:
+            old_overload = - min(0, graph[node][neighbor])
+            graph[node][neighbor] -= demand
+            new_overload += - min(0, graph[node][neighbor]) - old_overload
 
     return new_overload
 
@@ -445,6 +486,112 @@ def SRR_arc_node_one_timestep(graph, commodity_list, initial_path_list, actualis
 
     return results_list
 
+def SRR_arc_node_one_timestep_shorter(graph, commodity_list, initial_path_list, actualisation_threshold=None, flow_penalisation=10**-5, verbose=1):
+    # Takes the graph and commodities of a timestep in input together with the path of the commodities in the last timestep
+    # Try to minimize the overload and the number of path changes
+    # Tries to reduce distance from above algo
+    # The SRR heuristic is used on an arc-node formulation
+
+    nb_commodities = len(commodity_list)
+    nb_nodes = len(graph)
+    demand_list = [c[2] for c in commodity_list]
+    results_list = [None for commodity_index in range(nb_commodities)]
+
+    if actualisation_threshold is None:
+        actualisation_threshold = int(nb_nodes/10)
+
+    # Creating the arc-node formulation
+    model, variables, constraints  = arc_node_one_timestep_model(graph, commodity_list, initial_path_list, flow_penalisation=flow_penalisation, verbose=verbose>1)
+    initial_path_var, flow_var, overload_var, total_overload_var, delta_var = variables
+    delta_constraint_dict, linking_constraint_dict, flow_constraint_dict, capacity_constraint_dict, total_capacity_constraint_dict = constraints
+
+    model.update()
+    model.optimize()
+    if verbose : print("Objval = ", model.Objval)
+    # Extracting the information necessary for the randomized rounding from the solution of the linear relaxation
+    allocation_graph_per_origin, remaining_capacity_graph, initial_path_values = extract_allocation_from_model(model, graph, capacity_constraint_dict, flow_var, overload_var, initial_path_var, initial_path_list, commodity_list)
+
+    sorted_commodity_indices = sorted(list(range(nb_commodities)), key=lambda x : demand_list[x])
+    rounding_counter = 0
+
+    # Main loop : one commodity is assigned at each iteration
+    while sorted_commodity_indices:
+        commodity_index = sorted_commodity_indices.pop()
+        origin, destination, demand = commodity_list[commodity_index]
+        allocation_graph = allocation_graph_per_origin[origin]
+        if verbose:
+            print("#####################", len(sorted_commodity_indices), demand, end='   \r')
+
+        if commodity_index in initial_path_values:
+            initial_path_used_capacity = demand * initial_path_values[commodity_index]
+        else:
+            initial_path_used_capacity = 0
+
+        # Finding the path used by the commodity
+        remaining_demand = demand - initial_path_used_capacity
+        path_list = [initial_path_list[commodity_index]]
+        used_capacity_list = [initial_path_used_capacity]
+        #try to get shortest path
+        chosen_path, path_capacity = find_fitting_shortest_path(allocation_graph, remaining_capacity_graph, origin, destination, demand)
+        if chosen_path is not None:#we found a good solution
+            #try to find out if there are other possibilities
+            used_capacity = min(path_capacity, remaining_demand)
+            update_graph_capacity(allocation_graph, chosen_path, used_capacity)
+            otherpossible, _ = find_fitting_most_capacited_path(allocation_graph, remaining_capacity_graph, origin, destination, demand)
+            rounding_counter += (otherpossible != None)#increment rounding counter if there are other possibilities
+        else: #otherwise, try to find the best capacity path
+            while remaining_demand > 10**-6:
+                path, path_capacity = find_fitting_most_capacited_path(allocation_graph, remaining_capacity_graph, origin, destination, demand)
+                if path is None or path_capacity <= 10**-5:
+                    path, path_capacity = find_fitting_most_capacited_path(allocation_graph, remaining_capacity_graph, origin, destination, -10**10)
+
+                used_capacity = min(path_capacity, remaining_demand)
+                path_list.append(path)
+                used_capacity_list.append(used_capacity)
+                remaining_demand -= used_capacity
+                update_graph_capacity(allocation_graph, path, used_capacity)
+
+            if len(path_list) > 1:
+                rounding_counter += 1
+
+            # Choose a path for the commodity
+            proba_list = np.array(used_capacity_list) / sum(used_capacity_list)
+            chosen_path_index = np.random.choice(len(path_list), p=proba_list)
+            chosen_path = path_list[chosen_path_index]
+
+        # allcoate the commodity and update the capacities in different graphs
+        update_graph_capacity(remaining_capacity_graph, chosen_path, demand)
+        results_list[commodity_index] = chosen_path
+
+        # change the linear model to take into account a path fixing
+        flow_constraint_dict[origin, origin].RHS -= demand
+        flow_constraint_dict[origin, destination].RHS += demand
+
+
+        if commodity_index in initial_path_var:
+            model.addConstr((initial_path_var[commodity_index] == 0))
+
+        for node_index in range(len(chosen_path)-1):
+            node, neighbor = chosen_path[node_index], chosen_path[node_index + 1]
+            capacity_constraint_dict[node, neighbor].RHS -= demand
+
+        # THIS IS IMPORTANT
+        model.update()
+
+        # When the solution deviates to much from the the previously computed continuous solution :
+        # compute a new continuous solution with the non assigned commodities
+        if rounding_counter > actualisation_threshold:
+            rounding_counter = 0
+
+            model.update()
+            model.optimize()
+
+            if verbose : print("Objval = ", model.Objval)
+
+            allocation_graph_per_origin, remaining_capacity_graph, initial_path_values = extract_allocation_from_model(model, graph, capacity_constraint_dict, flow_var, overload_var, initial_path_var, initial_path_list, commodity_list)
+
+
+    return results_list
 
 def compute_possible_paths_per_commodity(graph, commodity_list, initial_path_list, nb_initial_path_created):
      # Extract the information necessary for the randomized rounding from the solution of the linear relaxation

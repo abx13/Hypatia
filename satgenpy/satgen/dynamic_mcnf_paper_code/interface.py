@@ -1,5 +1,5 @@
 import networkx as nx
-from .mcnf_dynamic import SRR_arc_node_one_timestep
+from .mcnf_dynamic import SRR_arc_node_one_timestep, SRR_arc_node_one_timestep_shorter
 
 def graph2nx(graphf):
 	#use for tests only, the weight attribute may be the bandwidth, not the distance as expected to run Floyd-Warshall
@@ -21,8 +21,8 @@ def nx2graph(graphnx, debitISL, verif=False):
 		#satellite links are bidirectionnal
 		#to make an inversible conversion, set g[u][v],g[v][u] =  data['weight'],data['weight']
 		#in Francois's algo, all we care about is bandwidth
-		g[u][v]=debitISL#rate in Mb/s
-		g[v][u]=debitISL
+		g[u][v]=[debitISL,data['weight']]#rate in Mb/s
+		g[v][u]=[debitISL,data['weight']]
 	return g
 
 def fstate2sol(fstate,list_commodities):
@@ -69,7 +69,7 @@ def elimineLiensImpossibles(graph,commodites):
 			diff_commodites.append(idcomm)
 	return diff_commodites,commodites_simplifiees
 
-def calcul_paths(graph,prev_fstate,commodity_list, debitISL):
+def calcul_paths(graph,prev_fstate,commodity_list, debitISL, algo):
 	#select computable commodities and create diff
 	diff_commodites,commodites_simplifiees=elimineLiensImpossibles(graph,commodity_list)
 	
@@ -87,7 +87,10 @@ def calcul_paths(graph,prev_fstate,commodity_list, debitISL):
 	#convert graph
 	total_net_graph_differentformat=nx2graph(graph, debitISL)
 	#compute new paths
-	list_paths = SRR_arc_node_one_timestep(total_net_graph_differentformat, commodites_simplifiees, init_path_list_simplifie)
+	if algo=="SRR_arc_node_one_timestep":
+		list_paths = SRR_arc_node_one_timestep(total_net_graph_differentformat, commodites_simplifiees, init_path_list_simplifie)
+	elif algo=="SRR_arc_node_one_timestep_shorter":
+		list_paths = SRR_arc_node_one_timestep_shorter(total_net_graph_differentformat, commodites_simplifiees, init_path_list_simplifie)
 	#add empty solutions
 	for idcom in diff_commodites:
 		list_paths.insert(idcom,[])

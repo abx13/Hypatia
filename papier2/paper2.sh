@@ -33,8 +33,9 @@
 # 
 ##########################################
 
-liste_arguments=("main_telesat_1015.py 22 500 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
-		"main_telesat_1015.py 22 500 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4")
+#liste_arguments=("main_telesat_1015.py 2 1000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2b 4" \
+liste_arguments=("main_telesat_1015.py 2 1000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4" \
+		"main_telesat_1015.py 2 1000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4")
 liste_debitISL=("20" "20") #Mb/s
 
 for ((i=0; i<${#liste_arguments[@]}; ++i )) ; do
@@ -44,7 +45,9 @@ for ((i=0; i<${#liste_arguments[@]}; ++i )) ; do
 	cd ns3_experiments || exit 1
 	# ns-3: Traffic matrix load
 	cd traffic_matrix_load || exit 1
+	if [[ ${arguments[5]} == "algorithm_free_one_only_over_isls2" ]]; then 
 	python step_1_generate_runs2.py $debitISL ${arguments[*]} || exit 1
+	fi
 	cd ../.. || exit 1
 
 	### SATGENPY ANALYSIS
@@ -73,6 +76,6 @@ for ((i=0; i<${#liste_arguments[@]}; ++i )) ; do
 done;
 cd ns3_experiments || exit 1
 cd traffic_matrix_load || exit 1
-python step_3_generate_plots.py || exit 1
+#python step_3_generate_plots.py || exit 1
 cd ..
 cd .. || exit 1

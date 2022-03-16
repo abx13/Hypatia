@@ -171,7 +171,8 @@ def calculate_fstate_shortest_path_without_gs_relaying2(
         sat_neighbor_to_if,
         prev_fstate,
         enable_verbose_logs,
-        is_last
+        is_last,
+        version
 ):
     #get the commodity list
 
@@ -204,7 +205,10 @@ def calculate_fstate_shortest_path_without_gs_relaying2(
         #	total_net_graph.add_edge(satid, num_satellites+groundStationId, weight = 10000000)#distanceSatGS
 
     #compute optimal path
-    list_paths = calcul_paths(total_net_graph, prev_fstate, commodity_list, debitISL)
+    if version=='a':
+        list_paths = calcul_paths(total_net_graph, prev_fstate, commodity_list, debitISL, "SRR_arc_node_one_timestep")
+    elif version=='b':
+        list_paths = calcul_paths(total_net_graph, prev_fstate, commodity_list, debitISL, "SRR_arc_node_one_timestep_shorter")
     # Forwarding state : by default, interfaces down and empty routing table
     if prev_fstate:
         fstate=prev_fstate.copy()
@@ -243,9 +247,6 @@ def calculate_fstate_shortest_path_without_gs_relaying2(
         with open(output_filename+".temp", "w+") as f_out:
             f_out.write(str(fstate))
             
-                
-                
-
     # Finally return result
     return fstate
 
