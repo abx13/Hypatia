@@ -99,8 +99,8 @@ for satgenpy_generated_constellation in [
     "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2",
     "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2b"
 ]:
-    for duration_s in [2]:
-        list_update_interval_ms = [1000]
+    for duration_s in [26]:
+        list_update_interval_ms = [2000]
 
         # Path
         for update_interval_ms in list_update_interval_ms:
