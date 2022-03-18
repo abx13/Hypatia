@@ -31,13 +31,21 @@ local_shell = exputil.LocalShell()
 #local_shell.remove_force_recursive("data")
 
 # Schedule
-#to get back to old code , put following lines at "schedule was here !!"
 random.seed(123456789)
 random.randint(0, 100000000)  # Legacy reasons
 seed_from_to = random.randint(0, 100000000)
+
+# get parameters (set by hypatia/papier2/paper2.sh)
+# expected parameters: debitISL constellation_file duration[s] timestep[ms] isls? Ground_stations? algorithm number_of_threads
 debitISL=int(sys.argv[1])
 params=sys.argv[2:]
-if not len(params):
+
+
+#set the ground station nodes
+#depending on the 
+#satellites node ids are in interval [0,nb_satellites-1]
+#ground station node ids belong to interval [nb_satellites, nb_satellites+nb_ground_stations-1]
+if not len(params):#remainder from hypatia/papier => may not be used
     params = ["16", "4"]#kuiper_630
     a = set(range(1156, 1256))
 elif "kuiper_630" in params[0] and "100" in params[4]:
@@ -48,8 +56,9 @@ else:
     print("erreur parametres non reconnus, editer step_1_generate_runs2 et/ou generate_for_paper")
     exit(1)
 list_from_to = networkload.generate_from_to_reciprocated_random_pairing(list(a), seed_from_to)
-#list_from_to = list_from_to[0:max(10,len(list_from_to))]
 
+
+#setting up commodities
 reference_rate = 1 # target sending rate in Mb/s
 list_proportion  =[random.choice(range(70,130))/100 for _ in range(len(list_from_to))]
 tcp_list_flow_size_byte=[int(elt*reference_rate*int(params[1])*(1e6/8)) for elt in list_proportion]#tcp : sending rate * randomization * simu_duration * coeff_Mb_to_bytes
@@ -168,7 +177,7 @@ for config in [
                         )
                     )
 
-#write the commodity list in an accessible place for path generation
+#write the commodity list in an easy place for path generation with mcnf
 local_shell.write_file("../../satellite_networks_state/commodites.temp", list(zip([elt[0] for elt in list_from_to],[elt[1] for elt in list_from_to],udp_list_flow_size_proportion)))
 
 #generate network graph
