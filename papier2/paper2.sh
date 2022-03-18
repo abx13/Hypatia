@@ -54,7 +54,7 @@ for ((i=0; i<${#liste_arguments[@]}; ++i )) ; do
 	#save debitISL in a simple place for graph generation. Used by mcnf
 	echo $debitISL > satellite_networks_state/debitISL.temp
 	
-	### Create Routing tables and generate constellation
+	### Create routing tables and generate constellation
 	cd ns3_experiments || exit 1
 	cd traffic_matrix_load || exit 1
 	python step_1_generate_runs2.py $debitISL ${arguments[*]} || exit 1
@@ -86,5 +86,11 @@ done;
 cd ns3_experiments || exit 1
 cd traffic_matrix_load || exit 1
 python step_3_generate_plots.py || exit 1
+
+
+# below scripts help to analyse simulation results. 
+python runs_logs.py #run when logs option is enabled in ns3 .properties files
+#python runs_mesh.py #run when mesh option is enabled in ns3 .properties (see hypatia/paper/ns3_simulation/a_b example. look for "pingmesh" in step1_generate_runs.py and template files)
+python runs_results.py #total results. Determine which is the best algo at a glance
 cd ..
 cd .. || exit 1

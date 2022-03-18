@@ -33,6 +33,6 @@ Python path.
    
 3. which will generate fstates in `gen_data` directory
 
-4. for information purpose, you can find `ground_stations_top_100` in gen_data
+4. for information purpose, you can find `ground_stations_top_100` in input_data
 
 	

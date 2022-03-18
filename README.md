@@ -43,11 +43,11 @@ It consists of four main components:
   (license: MIT)
   
 [ ADDENDUM ]
-* `papier2` : is an adaptation of paper to test mcnf routing algorithm
+* `papier2` : is our adaptation of paper to test mcnf routing algorithm
   
 (there is a fifth folder called `integration_tests` which is used for integration testing purposes)
 
-This is the code repository introduced and used in "Exploring the “Internet from space” with Hypatia" 
+This is based on the code repository introduced and used in "Exploring the “Internet from space” with Hypatia" 
 by Simon Kassing*, Debopam Bhattacherjee*, André Baptista Águas, Jens Eirik Saethre and Ankit Singla
 (*equal contribution), which is published in the Internet Measurement Conference (IMC) 2020.
 
@@ -82,10 +82,10 @@ BibTeX citation:
    bash hypatia_run_tests.sh
    ```
 
-5. The reproduction of the paper is essentially the tutorial for Hypatia.
+5. The reproduction of paper is essentially the tutorial for Hypatia.
    Please navigate to `paper/README.md`.
 
-6. Refer to `papier2/README.md` to compare shortest path and mcnf algorithm.
+6. Refer to `papier2/README.md` to compare routing with shortest path and mcnf algorithm.
 
 ### Visualizations
 Most of the visualizations in the paper are available [here](https://leosatsim.github.io/).

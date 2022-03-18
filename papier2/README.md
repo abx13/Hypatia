@@ -3,17 +3,17 @@
 Changement d'algorithme appliqué aux couches de Telesat
 
 étapes:
- - Installer hypatia comme prévu. 
- - configurer paper2.sh selon les spécifications du test à mener. 
-	 - paper2.sh renvoie aussi vers d'autres fichiers pour certains détails. À parcourir en entier avant de le lancer.
- -récupérer les résultats
-	-dans satgenpy_analysis pour les tests networkX
-	-dans ns3_experiments/traffic_matrix_load/runs pour les résultats des simulations ns3.
-	-éventuellement, lancer des scripts du dossier satviz pour des objets 3D
+ + Installer hypatia comme prévu avec `hypatia_install_dependencies.sh` et `hypatia_build.sh` à la racine du projet. 
+ + configurer paper2.sh selon les spécifications du test à mener. 
+	 + paper2.sh renvoie aussi vers d'autres fichiers pour certains modifier certains aspects de la simulation.
+ + récupérer les résultats
+	+ dans satgenpy_analysis/data pour les tests networkX
+	+ dans ns3_experiments/traffic_matrix_load/runs pour les résultats des simulations ns3.
+	+ éventuellement, lancer des scripts du dossier satviz pour des objets 3D
 	
 ## Résumé de hypatia: 
-+ hypatia/ns3-sat-sim contient le simulateur ns3 + des modules spécifiques dans contrib
-	+ le fichier principal est hypatia/ns3-sat-sim/simulator/scratch/main_satnet/main_satnet.cc
++ hypatia/ns3+sat+sim contient le simulateur ns3 + des modules spécifiques dans contrib
+	+ le fichier principal est hypatia/ns3+sat+sim/simulator/scratch/main_satnet/main_satnet.cc
 + hypatia/paper contient les précédentes simulations menées précédemment par Simon snkas
 + hypatia/paper2 contient les scripts de configuration de la topologie et de ns3, ainsi que les résultats lorsque le script paper2.sh a été correctement executé
 + hypatia/satgenpy contient la génération des constellations, du routage, et des outils d'analyse.
