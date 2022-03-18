@@ -27,7 +27,13 @@ if [ "$1" -eq "--help" ] || ([ "$#" -ne "2" ] && [ "$#" -ne "7" ]); then
   exit 0
 fi
 
+# papier2 generation
 if [ "$#" -eq "7" ]; then
+  #print human-readable commodities in input_data/commodites.txt file
+  cd input_data
+  python commodities_and_cities.py
+  cd ..
+  #select constellation and call routing tables generator
   python $1 $2 $3 $4 $5 $6 $7
   exit 0
 fi

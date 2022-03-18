@@ -1,7 +1,9 @@
 #[tcp_flow_id],[now_in_ns],[progress_byte/cwnd_byte/rtt_ns]
 """
 README
-Plot results obtained when enabling logs in the ns3 simulation  
+Plot results obtained when enabling logs in the ns3 simulation 
+to see which commodity is involved, refer to hypatia/papier2/satellite_networks_state/input_data/commodites.txt
+visualizations of the path can be found in the pdf files hypatia/papier2/satgenpy_analysis/data/*/*/manual/pdf
 """
 import os
 import matplotlib.pyplot as plt
@@ -21,7 +23,7 @@ for doss in dossiers:
 		fig,axes=plt.subplots(3,1, figsize=(16,9), dpi=80, facecolor="w", edgecolor='k')
 		t_cwnds=[int(line.split(',')[1])/10**9 for line in cwnds]
 		data_cwnds=[int(line.strip().split(',')[-1]) for line in cwnds]
-		fig.suptitle('id'+cwnds[0].split(',')[0]+" "+doss)
+		fig.suptitle('commodity id:'+cwnds[0].split(',')[0]+" from "+doss)
 		#axes[0].title('cwnds id'+cwnds[0].split(',')[0]+" "+doss)
 		axes[0].set_xlabel("temps simu(s)")
 		axes[0].set_ylabel("cwnd (bytes)")
