@@ -31,7 +31,7 @@ local_shell = exputil.LocalShell()
 #local_shell.remove_force_recursive("data")
 
 # Schedule
-random.seed(123456789)
+random.seed(123)
 random.randint(0, 100000000)  # Legacy reasons
 seed_from_to = random.randint(0, 100000000)
 

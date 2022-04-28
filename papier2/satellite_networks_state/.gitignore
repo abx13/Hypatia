@@ -1,5 +1,5 @@
 gen_data
 *.pyc
-temp
-input_data/commodites.txt
 *.temp
+input_data/commodites.txt
+

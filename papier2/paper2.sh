@@ -37,24 +37,32 @@
 
 ##########################################
 
-liste_arguments=("main_telesat_1015.py 26 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4" \
+liste_arguments=("main_telesat_1015.py 26 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
+		"main_telesat_1015.py 26 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4" \
 		"main_telesat_1015.py 26 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2b 4" \
+		"main_telesat_1015.py 26 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2c 4" \
 		"main_telesat_1015.py 26 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
 		"main_telesat_1015.py 26 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4" \
 		"main_telesat_1015.py 26 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2b 4" \
+		"main_telesat_1015.py 26 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2c 4" \
 		"main_telesat_1015.py 26 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
 		"main_telesat_1015.py 26 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4" \
 		"main_telesat_1015.py 26 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2b 4" \
-		"main_telesat_1015.py 26 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4")
+		"main_telesat_1015.py 26 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2c 4")
+#liste_arguments=("main_telesat_1015.py 26 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4" \
+#		"main_telesat_1015.py 26 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2c 4" \
+#		"main_telesat_1015.py 26 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2c 4" \
+#		"main_telesat_1015.py 26 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2c 4")
 
 #with default ~1Mb/s x 100 commodities,
 #2Mb/s ISL throughput => strong overload in UDP
 #4Mb/s ISL throughput => overload in shortest path
 #10Mb/s ISL throughput => network oversized, no overload
-liste_debitISL=("2" "2" "2"\
-	 		"4" "4" "4"\
-	 		"10" "10" "10")
+liste_debitISL=("2" "2" "2" "2"\
+	 		"4" "4" "4" "4"\
+	 		"10" "10" "10" "10")
 #values in Mb/s
+#liste_debitISL=("2" "3" "4" "10")
 
 if (( ${#liste_debitISL[@]} != ${#liste_arguments[@]} )); then
 	echo liste_debitISL ${#liste_debitISL[@]} and liste_arguments ${#liste_arguments[@]} must have the same size
@@ -79,7 +87,7 @@ for ((i=0; i<${#liste_arguments[@]}; ++i )) ; do
 	# edit variables 'satgenpy_generated_constellation', 'duration_s' 
 	# and 'list_update_interval_ms' in perform_full_analysis according to `liste_arguments`
 	cd satgenpy_analysis || exit 1
-	python perform_full_analysis.py ${arguments[*]} || exit 1
+	#python perform_full_analysis.py ${arguments[*]} || exit 1
 	cd .. || exit 1
 
 	# NS-3 EXPERIMENTS
@@ -99,13 +107,13 @@ done;
 # results in hypatia/papier2/ns3_experiments/traffic_matrix_load/pdf
 cd ns3_experiments || exit 1
 cd traffic_matrix_load || exit 1
-python step_3_generate_plots.py || exit 1
+# python step_3_generate_plots.py || exit 1
 
 
 # below scripts help to analyse simulation results. 
 echo " "
 echo " run logs analysis "
-python runs_logs.py #run when logs option is enabled in ns3 .properties files
+# python runs_logs.py #run when logs option is enabled in ns3 .properties files
 #echo " run ping analysis "
 #python runs_mesh.py #run when mesh option is enabled in ns3 .properties (see hypatia/paper/ns3_simulation/a_b example. look for "pingmesh" in step1_generate_runs.py and template files)
 echo "final results"

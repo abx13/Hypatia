@@ -97,7 +97,8 @@ print("Generating commands for constellation comparison...")
 for satgenpy_generated_constellation in [
 	"telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls",
     "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2",
-    "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2b"
+    "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2b",
+    "telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2c"
 ]:
     for duration_s in [26]:
         list_update_interval_ms = [2000]

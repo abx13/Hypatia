@@ -12,6 +12,9 @@ for doss in dossiers:
 	if "udp" in doss:
 		nbpktrec,nbpktem=0,0
 		qterec,qteem=0,0
+		if not (os.path.isfile(doss+chemin_udp[0]) and os.path.isfile(doss+chemin_udp[1])):
+			print(doss,"pas de donnees")
+			continue
 		with open(doss+chemin_udp[0], "r") as infic,\
 		open(doss+chemin_udp[1], "r") as outfic:
 			outlines=outfic.readlines()
@@ -25,6 +28,9 @@ for doss in dossiers:
 				qterec+=resi[10]/125000
 		print(doss,", [recus/emis] qtes: {:.2f}/{:.2f}Mb nb: {}/{}".format(qterec,qteem,nbpktrec,nbpktem))
 	else:
+		if not os.path.isfile(doss+chemin_tcp):
+			print(doss,"pas de donnees")
+			continue
 		with open(doss+chemin_tcp, "r") as fic:
 			finished=0
 			for line in fic:
