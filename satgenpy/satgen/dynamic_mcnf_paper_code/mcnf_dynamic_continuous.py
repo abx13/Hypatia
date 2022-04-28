@@ -68,6 +68,7 @@ def compute_shortest_path(shortest_path_list, parent_list, node):
 
 def is_correct_path(graph, commodity, path_tuple):
     # function that checks if a path_tuple is valid for a commodity in an instance
+    if len(path_tuple) < 2: return False
 
     origin, destination, demand = commodity
     is_correct =  path_tuple[0] == origin and path_tuple[-1] == destination
@@ -236,6 +237,106 @@ def arc_node_one_timestep_model(graph, commodity_list, initial_path_list, allowe
     initial_path_var = model.addVars(valid_initial_path_commodity_list, ub=1, name="initial_path") # variables deciding whether the initial path is used
     delta_var = model.addVars(valid_initial_path_commodity_list, obj=1, name="delta") # variables counting the path changes
     flow_var = model.addVars(super_commodity_list, arc_list, obj=flow_penalisation, name="flow_var") # flow variables
+    overload_var = model.addVars(arc_list, name="overload")
+    total_overload_var = model.addVar(obj=1)
+    if verbose:
+        print("variables created")
+
+    # constraints enabling the delta_var to count the path changes
+    delta_constraint_dict = model.addConstrs((1 - initial_path_var[commodity_index] - delta_var[commodity_index] <= 0) for commodity_index in valid_initial_path_commodity_list)
+    if verbose:
+        print("Delta constraints created")
+
+    # linking the initial_path_var to the other flow variables
+    linking_constraint_dict = {}
+    for origin in commodity_indices_by_origin:
+        edge_use_dict = {arc: [] for arc in arc_list}
+
+        for commodity_index in commodity_indices_by_origin[origin]:
+            initial_path = initial_path_list[commodity_index]
+            if is_correct_path(graph, commodity_list[commodity_index], initial_path):
+                for node_index in range(len(initial_path)-1):
+                    arc = (initial_path[node_index], initial_path[node_index+1])
+                    edge_use_dict[arc].append(commodity_index)
+
+        for node, neighbor in arc_list:
+            if edge_use_dict[node, neighbor] != []:
+                linking_constraint_dict[origin, node, neighbor] = model.addConstr((sum(initial_path_var[commodity_index] * demand_list[commodity_index] for commodity_index in edge_use_dict[node, neighbor]) - flow_var[origin, node, neighbor] <= 0))
+    if verbose:
+        print("Linking constraints created")
+
+    # Flow conservation constraints
+    flow_constraint_dict = {}
+    for origin in super_commodity_dict:
+        for node in range(nb_nodes):
+
+            rhs = 0
+
+            if node == origin:
+                rhs += sum(super_commodity_dict[origin].values())
+
+            if node in super_commodity_dict[origin]:
+                rhs += -super_commodity_dict[origin][node]
+
+            flow_constraint_dict[origin, node] = model.addConstr((flow_var.sum(origin,node,'*') - flow_var.sum(origin,'*',node) == rhs), "flow{}_{}".format(origin, node))
+    if verbose:
+        print("Flow conservation constraints created")
+
+    # Capacity constraints
+    capacity_constraint_dict = model.addConstrs((flow_var.sum('*', node, neighbor) - overload_var[node, neighbor] <= graph[node][neighbor][0] for node, neighbor in arc_list), "capacity")
+    total_capacity_constraint = model.addConstr((overload_var.sum() - total_overload_var <= allowed_overflow), "capacity_tot")
+    if verbose:
+        print("Capacity constraints created")
+
+    return model, (initial_path_var, flow_var, overload_var, total_overload_var, delta_var), (delta_constraint_dict, linking_constraint_dict, flow_constraint_dict, capacity_constraint_dict, total_capacity_constraint)
+
+def arc_node_one_timestep_model_b(graph, commodity_list, initial_path_list, allowed_overflow=None, flow_penalisation=0, verbose=1):
+    # Creates an arc-node formulation for one time-step of the dynamic unsplittable flow problem
+
+    nb_nodes = len(graph)
+    nb_commodities = len(commodity_list)
+    demand_list = [commodity[2] for commodity in commodity_list]
+
+    if allowed_overflow is None:
+         allowed_overflow = sum(demand_list)*0.01
+
+    # we aggregate the commodities by origin : this create a super commodity
+    # this process does not change the results of the continuous solver
+    super_commodity_dict = {}
+    commodity_indices_by_origin = {}
+    for commodity_index, commodity in enumerate(commodity_list):
+        origin, destination, demand = commodity
+
+        if origin not in super_commodity_dict:
+            super_commodity_dict[origin] = {}
+            commodity_indices_by_origin[origin] = []
+
+        if destination not in super_commodity_dict[origin]:
+            super_commodity_dict[origin][destination] = 0
+
+        super_commodity_dict[origin][destination] += demand
+        commodity_indices_by_origin[origin].append(commodity_index)
+
+    arc_list = [(node, neighbor) for node in range(nb_nodes) for neighbor in graph[node]]
+    super_commodity_list = list(super_commodity_dict.keys())
+
+    valid_initial_path_commodity_list = [commodity_index for commodity_index in range(nb_commodities) if is_correct_path(graph, commodity_list[commodity_index], initial_path_list[commodity_index])]
+
+    # Create optimization model
+    model = gurobipy.Model('netflow')
+    model.modelSense = gurobipy.GRB.MINIMIZE
+    model.Params.OutputFlag = verbose>1
+
+    # Create variables
+    initial_path_var = model.addVars(valid_initial_path_commodity_list, ub=1, name="initial_path") # variables deciding whether the initial path is used
+    delta_var = model.addVars(valid_initial_path_commodity_list, obj=1, name="delta") # variables counting the path changes
+    flow_var = model.addVars(super_commodity_list, arc_list, obj=0, name="flow_var")
+    minpen, maxpen =  float('inf'), -float('inf')
+    for super_commodity, node1, node2 in flow_var:
+        flow_var[super_commodity, node1, node2].Obj = flow_penalisation * graph[node1][node2][1]/1e5 # try to minimize travel distance 
+        minpen = min(minpen, flow_penalisation * graph[node1][node2][1]/1e5)
+        maxpen = max(maxpen, flow_penalisation * graph[node1][node2][1]/1e5)
+    print("max, min des penalisations: ",maxpen,minpen)
     overload_var = model.addVars(arc_list, name="overload")
     total_overload_var = model.addVar(obj=1)
     if verbose:

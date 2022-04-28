@@ -1,5 +1,5 @@
 import networkx as nx
-from .mcnf_dynamic import SRR_arc_node_one_timestep, SRR_arc_node_one_timestep_shorter
+from .mcnf_dynamic import SRR_arc_node_one_timestep, SRR_arc_node_one_timestep_shorter, SRR_arc_node_one_timestep_shorterc
 
 def graph2nx(graphf):
 	#use for tests only, the weight attribute may be the bandwidth, not the distance as expected to run Floyd-Warshall
@@ -83,7 +83,8 @@ def calcul_paths(graph,prev_fstate,commodity_list, debitISL, algo):
 		elif init_path_list[idcom]:#the commodity will be kept, there was a path previously computed
 			init_path_list_simplifie.append(init_path_list[idcom])
 		else:#this is a new commodity, compute shortest path
-			init_path_list_simplifie.append(nx.shortest_path(graph, src:=comm[0], dst:=comm[1]))
+			#init_path_list_simplifie.append(nx.shortest_path(graph, src:=comm[0], dst:=comm[1]))
+			init_path_list_simplifie.append([])
 	#convert graph
 	total_net_graph_differentformat=nx2graph(graph, debitISL)
 	#compute new paths
@@ -91,6 +92,8 @@ def calcul_paths(graph,prev_fstate,commodity_list, debitISL, algo):
 		list_paths = SRR_arc_node_one_timestep(total_net_graph_differentformat, commodites_simplifiees, init_path_list_simplifie)
 	elif algo=="SRR_arc_node_one_timestep_shorter":
 		list_paths = SRR_arc_node_one_timestep_shorter(total_net_graph_differentformat, commodites_simplifiees, init_path_list_simplifie)
+	elif algo=="SRR_arc_node_one_timestep_shorterc":
+		list_paths = SRR_arc_node_one_timestep_shorterc(total_net_graph_differentformat, commodites_simplifiees, init_path_list_simplifie)
 	#add empty solutions
 	for idcom in diff_commodites:
 		list_paths.insert(idcom,[])

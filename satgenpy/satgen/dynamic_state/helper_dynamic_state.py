@@ -147,23 +147,23 @@ def help_dynamic_state(
 
     # mix up last computed of thread i and first computed of thread i+1
     for current_epoch in range(num_calculations-1):
-        output_filename1 = output_dynamic_state_dir + "/fstate_" + str(current_epoch * time_step_ns) + ".txt.temp"
-        with open(output_filename1,"r") as f1:
-            fstate_i = eval(f1.readline())
-            
-        output_filename2 = output_dynamic_state_dir + "/fstate_" + str((current_epoch+1) * time_step_ns) + ".txt"
-        with open(output_filename2,"r") as f2:
-            liste_lignes = f2.readlines()
-            texte = '),('.join(liste_lignes)
-            texte = '('+texte+')'
-            table_routage = eval(texte)
-            fstate_ip1 = {(elt[0],elt[1]): elt[2:] for elt in table_routage}
-        for cle in fstate_i:
-            if fstate_ip1[cle]==fstate_i[cle] or fstate_ip1[cle]==(-1,-1,-1):
-                del fstate_ip1[cle]
-        with open(output_filename2,"w") as f:
-            for cle in fstate_ip1:
-                f.write("{},{},{},{},{}\n".format(*cle, *fstate_ip1[cle]))
-        os.remove(output_filename1)
+        if os.path.isfile(output_filename1 := output_dynamic_state_dir + "/fstate_" + str(current_epoch * time_step_ns) + ".txt.temp"):#fstate_0 must not be considered except if it is last..
+            with open(output_filename1,"r") as f1:
+                fstate_i = eval(f1.readline())
+                
+            output_filename2 = output_dynamic_state_dir + "/fstate_" + str((current_epoch+1) * time_step_ns) + ".txt"
+            with open(output_filename2,"r") as f2:
+                liste_lignes = f2.readlines()
+                texte = '),('.join(liste_lignes)
+                texte = '('+texte+')'
+                table_routage = eval(texte)
+                fstate_ip1 = {(elt[0],elt[1]): elt[2:] for elt in table_routage}
+            for cle in fstate_i:
+                if fstate_ip1[cle]==fstate_i[cle] or fstate_ip1[cle]==(-1,-1,-1):
+                    del fstate_ip1[cle]
+            with open(output_filename2,"w") as f:
+                for cle in fstate_ip1:
+                    f.write("{},{},{},{},{}\n".format(*cle, *fstate_ip1[cle]))
+            os.remove(output_filename1)
     os.remove(output_dynamic_state_dir + "/fstate_" + str((num_calculations-1) * time_step_ns) + ".txt.temp")
     

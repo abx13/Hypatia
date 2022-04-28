@@ -209,6 +209,8 @@ def calculate_fstate_shortest_path_without_gs_relaying2(
         list_paths = calcul_paths(total_net_graph, prev_fstate, commodity_list, debitISL, "SRR_arc_node_one_timestep")
     elif version=='b':
         list_paths = calcul_paths(total_net_graph, prev_fstate, commodity_list, debitISL, "SRR_arc_node_one_timestep_shorter")
+    elif version=='c':
+        list_paths = calcul_paths(total_net_graph, prev_fstate, commodity_list, debitISL, "SRR_arc_node_one_timestep_shorterc")
     # Forwarding state : by default, interfaces down and empty routing table
     if prev_fstate:
         fstate=prev_fstate.copy()
