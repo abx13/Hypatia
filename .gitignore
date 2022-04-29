@@ -3,4 +3,5 @@
 dev_testing/
 *commodites.temp
 .vscode/
-papier2/sauvegardes
+papier2/sauvegardes/*
+!papier2/sauvegardes/etudes.py
