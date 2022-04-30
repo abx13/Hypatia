@@ -1,7 +1,6 @@
 import os, sys
 import matplotlib.pyplot as plt
 import numpy as np
-import scipy.optimize as opt
 
 dico={'isls':{},'isls2':{},'isls2b':{},'isls2c':{}}
 #cmap=plt.get_cmap('rainbow')
@@ -40,25 +39,12 @@ for glob in tous:
 				analyse('/'.join([glob,subglob]))
 
 
-fig, axs = plt.subplots(2, 2, sharex=True, sharey=True)
-fig.suptitle("plots for differents algos")
-
-
-def optimise_data(x, y):
-	# This is the function we are trying to fit to the data.
-	def func(x, a, b, c):
-		return a * np.exp(-b * x) + c
-	# The actual curve fitting happens here
-	optimizedParameters, pcov = opt.curve_fit(func, x, y)
-	# Use the optimized parameters to plot the best fit
-	return func, optimizedParameters, pcov
-
 for i,(algo,val) in enumerate(dico.items()):
 	valeurs_algo={}
 	for seed,listexy in val.items():
 		x=[listexy[i][0] for i in range(len(listexy))]
 		y=[listexy[i][1] for i in range(len(listexy))]
-		axs[i%2, i//2].plot(x,y,color=dico_couleurs[algo],marker="*", linestyle='', alpha=ALPHA)
+		plt.plot(x,y,color=dico_couleurs[algo],marker="*", linestyle='', alpha=ALPHA)
 		nbvaleurs+=len(listexy)
 		for xy in listexy:
 			x,y=xy
@@ -69,18 +55,11 @@ for i,(algo,val) in enumerate(dico.items()):
 	X=sorted(valeurs_algo.keys())
 	moy=np.array([np.mean(valeurs_algo[x]) for x in X])
 	std=np.array([np.std(valeurs_algo[x]) for x in X])
-	#axs[i%2, i//2].errorbar(X, moy, 2*std, color=dico_couleurs[algo], label=algo)
-	foptim,args_optim, pcov=optimise_data(np.array(X),moy)
-	Xfit=np.linspace(X[0],X[-1],100)
-	Yfit=foptim(Xfit,*args_optim)
-	perr = np.sqrt(np.diag(pcov))
-	axs[i%2, i//2].plot(Xfit, Yfit, color=dico_couleurs[algo])
-	axs[i%2, i//2].fill_between(Xfit, foptim(Xfit,*(args_optim-2*perr)), foptim(Xfit,*(args_optim+2*perr)),color=dico_couleurs[algo], alpha=ALPHA)
-	axs[i%2, i//2].set_title(algo)
+	plt.errorbar(X, moy, 2*std, color=dico_couleurs[algo], label=algo)
+plt.legend()
 
-fig.text(0.5, 0.01, 'ISL (Mb/s)', ha='center')
-fig.text(0.01, 0.5, 'ratio arrived/sent', va='center', rotation='vertical')	
-fig.tight_layout()
+plt.xlabel('ISL (Mb/s)')
+plt.ylabel('ratio arrived/sent')	
 
 
 

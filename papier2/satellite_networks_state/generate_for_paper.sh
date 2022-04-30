@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 # Usage help
-if [ "$1" -eq "--help" ] || ([ "$#" -ne "2" ] && [ "$#" -ne "7" ]); then
+if [ "$1" = "--help" ] || ([ "$#" -ne "2" ] && [ "$#" -ne "7" ]); then
   echo "Usage: bash generate_for_paper.sh [id: 0 - 14] [number of threads]"
   echo "Other Usage: bash generate_for_paper.sh [main_constellation_shell.py] [simulation duration] [time step] [isls_?] [ground_stations] [algorithm] [number of threads]"
   exit 0
