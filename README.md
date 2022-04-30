@@ -71,6 +71,7 @@ BibTeX citation:
    ```
    bash hypatia_install_dependencies.sh
    ```
+   The scripts running in papier2 also need the Gurobi Optimizer library, activated with a Gurobi License. The academic license is a good solution. The MCNF algorithms (in satgen/dynamic_mcnf_paper_code) will require functions which are not included in gurobipy.
    
 3. Build all four modules (as far as possible):
    ```

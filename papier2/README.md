@@ -4,6 +4,7 @@ Changement d'algorithme appliqué aux couches de Telesat
 
 étapes:
  + Installer hypatia comme prévu avec `hypatia_install_dependencies.sh` et `hypatia_build.sh` à la racine du projet. 
+ + Les calculs de MultiCommodity Network Flow ont besoin de Gurobi. Gurobi propose des licenses académiques. Gurobipy ne suffit pas, il faut télécharger la librairie Gurobi Optimizer, et activer les fonctionnalités avec une license Gurobi.
  + configurer paper2.sh selon les spécifications du test à mener. 
 	 + paper2.sh renvoie aussi vers d'autres fichiers pour certains modifier certains aspects de la simulation.
  + récupérer les résultats
