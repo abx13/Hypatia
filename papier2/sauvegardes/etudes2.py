@@ -2,10 +2,10 @@ import os, sys
 import matplotlib.pyplot as plt
 import numpy as np
 
-dico={'isls':{},'isls2':{},'isls2b':{},'isls2c':{}}
+dico={'isls':{},'isls2':{},'isls2b':{},'isls2c':{}, 'isls2d':{}, 'isls2e':{}}
 #cmap=plt.get_cmap('rainbow')
 #dico_couleurs={cle:cmap(i/len(dico)) for i,cle in enumerate(dico.keys())}
-couleurs=['tab:blue', "tab:orange", "tab:green", "tab:red"]
+couleurs=['tab:blue', "tab:orange", "tab:green", "tab:red", "tab:purple", 'tab:brown', 'tab:pink', 'tab:gray', "tab:olive", 'tab:cyan']
 dico_couleurs={algo:couleur for algo,couleur in zip(dico.keys(),couleurs)}
 ALPHA=0.2
 nbvaleurs=0
@@ -14,6 +14,8 @@ def analyse(file):
 	with open(file,"r") as f:
 		for line in f:
 			if 'udp' not in line:
+				continue
+			if "pas de donnees" in line:
 				continue
 			nomfic=file
 			if '/' in nomfic:
@@ -64,7 +66,7 @@ plt.ylabel('ratio arrived/sent')
 
 
 #plt.legend()
-nomfic="comparisonv"
+nomfic="comparisonv2"
 if len(sys.argv) > 1:
 	nomfic+=' '.join(sys.argv[1:])
 plt.savefig(nomfic+".png")

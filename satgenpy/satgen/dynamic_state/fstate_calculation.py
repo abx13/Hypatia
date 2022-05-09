@@ -200,7 +200,7 @@ def calculate_fstate_shortest_path_without_gs_relaying2(
     for groundStationId in range(num_ground_stations):
         if ground_station_satellites_in_range_candidates[groundStationId]:
             distanceSatGS,satid = sorted(ground_station_satellites_in_range_candidates[groundStationId])[0]
-            total_net_graph.add_edge(satid, num_satellites+groundStationId, weight = 10000000)#distanceSatGS
+            total_net_graph.add_edge(satid, num_satellites+groundStationId, weight = distanceSatGS)
         #for distanceSatGS,satid in sorted(ground_station_satellites_in_range_candidates[groundStationId]):
         #	total_net_graph.add_edge(satid, num_satellites+groundStationId, weight = 10000000)#distanceSatGS
 
@@ -211,6 +211,12 @@ def calculate_fstate_shortest_path_without_gs_relaying2(
         list_paths = calcul_paths(total_net_graph, prev_fstate, commodity_list, debitISL, "SRR_arc_node_one_timestep_shorter")
     elif version=='c':
         list_paths = calcul_paths(total_net_graph, prev_fstate, commodity_list, debitISL, "SRR_arc_node_one_timestep_shorterc")
+    elif version=='d':
+        list_paths = calcul_paths(total_net_graph, prev_fstate, commodity_list, debitISL, "SRR_arc_node_one_timestep_shorterd")
+    elif version=='e':
+        list_paths = calcul_paths(total_net_graph, prev_fstate, commodity_list, debitISL, "SRR_arc_node_one_timestep_shortere")
+    else:
+        raise Exception("Erreur de version d'algorithme")
     # Forwarding state : by default, interfaces down and empty routing table
     if prev_fstate:
         fstate=prev_fstate.copy()

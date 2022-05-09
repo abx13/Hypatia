@@ -1,4 +1,4 @@
-graines=(12345 123 12 1)
+graines=(207 208 209 210 211)
 for graine in ${graines[@]}; do
 	echo graine: $graine
 	sed -i 's/random.seed([0-9]*)/random.seed('${graine}')/' ./ns3_experiments/traffic_matrix_load/step_1_generate_runs2.py
