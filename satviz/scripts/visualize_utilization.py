@@ -29,6 +29,18 @@ try:
 except (ImportError, SystemError):
     import util
 
+import sys
+
+# Input utilization data file; Generated during simulation
+IN_UTIL_FILE = "../../papier2/ns3_experiments/traffic_matrix_load/runs/run_loaded_tm_pairing_20_Mbps_for_2s_with_udp_algorithm_free_one_only_over_isls2_com10Mbs/logs_ns3/isl_utilization.csv"
+
+
+if len(sys.argv)>1:
+	modif=True
+	fic=sys.argv[1]
+	print(fic)
+	IN_UTIL_FILE = fic
+	myOUTPUT_NAME = '-'.join(fic.split('/')[3:])
 # For all end-end paths, visualize link utilization at a specific time instance
 
 EARTH_RADIUS = 6378135.0 # WGS72 value; taken from https://geographiclib.sourceforge.io/html/NET/NETGeographicLib_8h_source.html
@@ -97,15 +109,14 @@ bottomFile = "../static_html/bottom.html"
 city_detail_file = "../../paper/satellite_networks_state/input_data/ground_stations_cities_sorted_by_estimated_2025_pop_top_1000.basic.txt"
 
 # Time in ms for which visualization will be generated
-GEN_TIME=5000  #ms
+GEN_TIME=1000  #ms
 
-# Input utilization data file; Generated during simulation
-IN_UTIL_FILE = "../../papier2/ns3_experiments/traffic_matrix_load/runs/run_loaded_tm_pairing_4_Mbps_for_21s_with_udp_algorithm_free_one_only_over_isls2/logs_ns3/isl_utilization.csv"
 
 # Output directory for creating visualization html files
 OUT_DIR = "../viz_output/"
 OUT_HTML_FILE = OUT_DIR + NAME + "_util_" + str(GEN_TIME) + ".html"
-
+if modif:
+	OUT_HTML_FILE = OUT_DIR + myOUTPUT_NAME + "_util_" + str(GEN_TIME) + ".html"
 sat_objs = []
 time_wise_util = {}
 

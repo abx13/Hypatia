@@ -31,7 +31,7 @@ local_shell = exputil.LocalShell()
 #local_shell.remove_force_recursive("data")
 
 # Schedule
-random.seed(211)
+random.seed(11)
 random.randint(0, 100000000)  # Legacy reasons
 seed_from_to = random.randint(0, 100000000)
 
@@ -144,7 +144,11 @@ for config in [
                                               "[ISL-MAX-QUEUE-SIZE-PKTS]", str(queue_size_isl_pkt))
         local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties",
                                               "[GSL-MAX-QUEUE-SIZE-PKTS]", str(queue_size_gsl_pkt))
-
+        #create the ping meshgrid with all commodities in the required format: "set(0->1, 5->6)"
+        commodities_set='set(' + ', '.join(f'{x[0]}->{x[1]}' for x in list_from_to) + ')'
+        local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties",
+                                              "[SET-OF-COMMODITY-PAIRS]", commodities_set)
+        
         # Make logs_ns3 already for console.txt mapping
         local_shell.make_full_dir(run_dir + "/logs_ns3")
 

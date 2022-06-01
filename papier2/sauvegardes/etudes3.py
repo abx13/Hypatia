@@ -11,6 +11,12 @@ import numpy as np
 FIC_RES="fichier_resultats"
 RECIPROQUE=False #""" considérer les chemins A->B et B->A comme la même mesure """
 dico={'isls':{},'isls2':{},'isls2b':{},'isls2c':{}, 'isls2d':{}, 'isls2e':{}}
+def nom_algo(algo):
+	if algo=='isls':
+		return 'Shortest path'
+	if algo=='isls2':
+		return 'UMCF'
+	return algo  
 #cmap=plt.get_cmap('rainbow')
 #dico_couleurs={cle:cmap(i/len(dico)) for i,cle in enumerate(dico.keys())}
 
@@ -101,10 +107,12 @@ def enregistreur_logs(reciproque=RECIPROQUE):
 
 #Etude par sources
 def affiche_logs_sources(reciproque=RECIPROQUE):
-	fig, axs = plt.subplots(2, 3, sharex=True, sharey=True)
-	fig.suptitle("plots for differents algos")
+	placement=(2,1)
+	fig, axs = plt.subplots(*placement, sharex=True, sharey=True)
+	axs=np.reshape(axs,placement)
+	fig.suptitle("Comparison of the median throughput ratios per source")
 	assert RECIPROQUE==False
-	for i_algo,(algo,dic) in enumerate(dico.items()):
+	for i_algo,(algo,dic) in enumerate([elt for elt in dico.items() if elt[0]=='isls' or elt[0]=='isls2']):
 		lignes=[]
 		ratios={}
 		nb_mesures={}
@@ -128,17 +136,18 @@ def affiche_logs_sources(reciproque=RECIPROQUE):
 				if not isl in y:
 					y[isl]=[]
 				y[isl].append(np.median(vals))
+				print(algo, len(vals))
 			lignes.append('{} {}\n'.format(src,caracs))
 			x.append(src)
 		for isl in sorted(y):
-			axs[i_algo%2,i_algo//2].step(range(len(y[isl])),sorted(y[isl]), where='mid', label=isl)
+			axs[i_algo%2,i_algo//2].step(range(len(y[isl])),sorted(y[isl]), where='mid', label=f"{isl}Mb/s")
 			#axs[i_algo%2,i_algo//2].step(x, y[isl], where='mid', label=isl)
-		axs[i_algo%2,i_algo//2].set_title(f'algorithme: {algo}')
+		axs[i_algo%2,i_algo//2].set_title(f'{nom_algo(algo)} algorithm')
 		axs[i_algo%2,i_algo//2].legend()
 		#with open("{}_{}_sources.txt".format(FIC_RES,algo),"w") as f:
 		#	f.writelines(lignes)	
-	fig.text(0.5, 0.01, 'id station source', ha='center')
-	fig.text(0.01, 0.5, 'ratio reçu/envoyé median', va='center', rotation='vertical')	
+	fig.text(0.5, 0.01, 'sorted source stations', ha='center')
+	fig.text(0.01, 0.5, 'ratio received/sent', va='center', rotation='vertical')	
 	fig.tight_layout()
 	
 	nomfic="comparisonv3"

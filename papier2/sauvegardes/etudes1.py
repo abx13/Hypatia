@@ -51,7 +51,7 @@ def optimise_data(x, y):
 	# Use the optimized parameters to plot the best fit
 	return func, optimizedParameters, pcov
 	
-for i,(algo,val) in enumerate(dico.items()):
+for i,(algo,val) in enumerate([elt for elt in dico.items() if elt[0]=='isls' or elt[0]=='isls2']):
 	valeurs_algo={}
 	for seed,listexy in val.items():
 		x=[listexy[i][0] for i in range(len(listexy))]
@@ -74,12 +74,16 @@ for i,(algo,val) in enumerate(dico.items()):
 	#plt.fill_between(Xfit, foptim(Xfit,*(args_optim-perr)), foptim(Xfit,*(args_optim+perr)),color=dico_couleurs[algo], alpha=ALPHA)
 	#moy=np.array([np.mean(valeurs_algo[x]) for x in X])
 	#std=np.array([np.std(valeurs_algo[x]) for x in X])
+	if algo=='isls':
+		nom_algo='Shortest path'
+	elif algo=='isls2':
+		nom_algo='UMCF'
 	if (pcov==float('inf')).any():
 		#covariance matrix could not be estimated, curve won't fit well
-		plt.errorbar(X, moy, 2*std, color=dico_couleurs[algo], label=algo)
+		plt.errorbar(X, moy, 2*std, color=dico_couleurs[algo], label=nom_algo)
 	else:
 		#plot the 95% intervall of confidence
-		plt.plot(Xfit, Yfit, color=dico_couleurs[algo], label=algo)
+		plt.plot(Xfit, Yfit, color=dico_couleurs[algo], label=nom_algo)
 		plt.errorbar(X, moy, 2*std, ls='', color=dico_couleurs[algo])
 plt.legend()
 
