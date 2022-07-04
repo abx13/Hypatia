@@ -55,6 +55,7 @@ fi
 # Print what is being run
 echo "Running workload ${id} with ${num_threads} threads"
 
+
 # Kuiper-630 without ISLS, only ground station relays
 if [ "${id}" = "0" ]; then
   python main_kuiper_630.py 200 50 isls_none ground_stations_paris_moscow_grid algorithm_free_one_only_gs_relays ${num_threads}

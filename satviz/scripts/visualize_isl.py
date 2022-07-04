@@ -104,7 +104,7 @@ ORB_WISE_IDS[4] = []
 """
 # TELESAT
 NAME = "Telesat"
-SHELL_CNTR = 2
+SHELL_CNTR = 1
 
 MEAN_MOTION_REV_PER_DAY = [None]*SHELL_CNTR
 ALTITUDE_M = [None]*SHELL_CNTR
@@ -123,6 +123,7 @@ BASE_ID[0] = 0
 ORB_WISE_IDS[0] = []
 
 
+"""
 MEAN_MOTION_REV_PER_DAY[1] = 12.84  # Altitude ~1325 km
 ALTITUDE_M[1] = 1325000  # Altitude ~1325 km
 NUM_ORBS[1] = 40
@@ -130,7 +131,7 @@ NUM_SATS_PER_ORB[1] = 33
 INCLINATION_DEGREE[1] = 50.88
 BASE_ID[1] = 351
 ORB_WISE_IDS[1] = []
-
+"""
 #"""
 
 """
@@ -180,12 +181,13 @@ ORB_WISE_IDS[2] = []
 # General files needed to generate visualizations; Do not change for different simulations
 topFile = "../static_html/top.html"
 bottomFile = "../static_html/bottom.html"
+city_detail_file = "../../paper/satellite_networks_state/input_data/ground_stations_cities_sorted_by_estimated_2025_pop_top_100.basic.txt"
 
 # Output directory for creating visualization html files
 OUT_DIR = "../viz_output/"
 # JSON_NAME  = NAME+"_5shell.json"
 # OUT_JSON_FILE = OUT_DIR + JSON_NAME
-OUT_HTML_FILE = OUT_DIR + NAME + ".html"
+OUT_HTML_FILE = OUT_DIR + NAME + "_ISLS.html"
 
 # START = Time(EPOCH, scale="tdb")
 # END = START + (10*60) * u.second
@@ -199,6 +201,7 @@ def generate_satellite_trajectories():
     :return: viz_string
     """
     viz_string = ""
+
     for i in range(0, SHELL_CNTR):
         sat_objs = util.generate_sat_obj_list(
             NUM_ORBS[i],
@@ -211,17 +214,19 @@ def generate_satellite_trajectories():
             MEAN_MOTION_REV_PER_DAY[i],
             ALTITUDE_M[i]
         )
+
+                          
         for j in range(len(sat_objs)):
             sat_objs[j]["sat_obj"].compute(EPOCH)
-            viz_string += "var redSphere = viewer.entities.add({name : '', position: Cesium.Cartesian3.fromDegrees(" \
+            viz_string += "var redSphere = viewer.entities.add({name : '', label: {id:'sat_id', text:'"+str(j)+"', fillColor:Cesium.Color.BLACK, scale:0.5}, position: Cesium.Cartesian3.fromDegrees(" \
                           + str(math.degrees(sat_objs[j]["sat_obj"].sublong)) + ", " \
                           + str(math.degrees(sat_objs[j]["sat_obj"].sublat)) + ", " + str(
                 sat_objs[j]["alt_km"] * 1000) + "), " \
-                          + "ellipsoid : {radii : new Cesium.Cartesian3(30000.0, 30000.0, 30000.0), " \
+                          + "ellipsoid : {radii : new Cesium.Cartesian3(10.0, 10.0, 10.0), " \
                           + "material : Cesium.Color.BLACK.withAlpha(1),}});\n"
 
         orbit_links = util.find_orbit_links(sat_objs, NUM_ORBS[i], NUM_SATS_PER_ORB[i])
-        
+        """
         for key in orbit_links:
             sat1 = orbit_links[key]["sat1"]
             sat2 = orbit_links[key]["sat2"]
@@ -234,10 +239,39 @@ def generate_satellite_trajectories():
                           + str(sat_objs[sat2]["alt_km"] * 1000) + "]), " \
                           + "width: 0.5, arcType: Cesium.ArcType.NONE, " \
                           + "material: new Cesium.PolylineOutlineMaterialProperty({ " \
-                          + "color: Cesium.Color."+COLOR[i]+".withAlpha(0.4), outlineWidth: 0, outlineColor: Cesium.Color.BLACK})}});"
+                          + "color: Cesium.Color.BLACK.withAlpha(0.4), outlineWidth: 0, outlineColor: Cesium.Color.BLACK})}});"
+                          #+ "color: Cesium.Color."+COLOR[i]+".withAlpha(0.4), outlineWidth: 0, outlineColor: Cesium.Color.BLACK})}});\n"
     
+        """
+
+        # Add +Grid links
+        grid_links = util.find_grid_links(sat_objs, NUM_ORBS[i], NUM_SATS_PER_ORB[i])
+        for key in grid_links:
+            sat1 = grid_links[key]["sat1"]
+            sat2 = grid_links[key]["sat2"]
+            viz_string += "var redSphere = viewer.entities.add({name : '', polyline: { positions: Cesium.Cartesian3.fromDegreesArrayHeights([" \
+                        + str(math.degrees(sat_objs[sat1]["sat_obj"].sublong)) + "," \
+                        + str(math.degrees(sat_objs[sat1]["sat_obj"].sublat)) + "," \
+                        + str(sat_objs[sat1]["alt_km"] * 1000) + "," \
+                        + str(math.degrees(sat_objs[sat2]["sat_obj"].sublong)) + "," \
+                        + str(math.degrees(sat_objs[sat2]["sat_obj"].sublat)) + "," \
+                        + str(sat_objs[sat2]["alt_km"] * 1000) + "]), " \
+                        + "width: 0.5, arcType: Cesium.ArcType.NONE, " \
+                        + "material: new Cesium.PolylineOutlineMaterialProperty({ " \
+                        + "color: Cesium.Color.DODGERBLUE.withAlpha(0.4), outlineWidth: 0, outlineColor: Cesium.Color.BLACK})}});\n"
         
-    
+        #Add GS
+        city_details = {}
+        city_details = util.read_city_details(city_details, city_detail_file)
+       
+        for k in range(len(city_details)):   
+            viz_string += "var redSphere = viewer.entities.add({name : '', label: {id:'GS_name', text:'"+str(k+351)+"', fillColor:Cesium.Color.RED, scale:0.5}, position: Cesium.Cartesian3.fromDegrees(" \
+                          + str(city_details[k]["long_deg"]) + ", " \
+                          + str(city_details[k]["lat_deg"]) + ", " \
+                          + str(city_details[k]["alt_km"] * 1000) + "), " \
+                          + "ellipsoid : {radii : new Cesium.Cartesian3(100.0, 100.0, 100.0), " \
+                          + "material : Cesium.Color.RED.withAlpha(1),}});\n"                        
+  
     return viz_string
 
 

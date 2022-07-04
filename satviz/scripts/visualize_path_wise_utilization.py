@@ -59,7 +59,7 @@ NUM_ORBS = 72
 NUM_SATS_PER_ORB = 22
 INCLINATION_DEGREE = 53
 """
-
+"""
 # KUIPER 630
 NAME = "kuiper_630"
 
@@ -76,11 +76,29 @@ MAX_ISL_LENGTH_M = 2 * math.sqrt(math.pow(EARTH_RADIUS + ALTITUDE_M, 2) - math.p
 NUM_ORBS = 34
 NUM_SATS_PER_ORB = 34
 INCLINATION_DEGREE = 51.9
+"""
+# Telesat 1015
+NAME = "telesat_1015"
+
+################################################################
+# The below constants are taken from Telesat's FCC filing as below:
+# [1]: https://fcc.report/IBFS/SAT-MPL-20200526-00053/2378318.pdf
+################################################################
+
+MEAN_MOTION_REV_PER_DAY = 13.66  # Altitude ~1015 km
+ALTITUDE_M = 1015000  # Altitude ~1015 km
+SATELLITE_CONE_RADIUS_M = ALTITUDE_M / math.tan(math.radians(10.0))  # Considering an elevation angle of 10 degrees;
+MAX_GSL_LENGTH_M = math.sqrt(math.pow(SATELLITE_CONE_RADIUS_M, 2) + math.pow(ALTITUDE_M, 2))
+# ISLs are not allowed to dip below 80 km altitude in order to avoid weather conditions
+MAX_ISL_LENGTH_M = 2 * math.sqrt(math.pow(EARTH_RADIUS + ALTITUDE_M, 2) - math.pow(EARTH_RADIUS + 80000, 2))
+NUM_ORBS = 27
+NUM_SATS_PER_ORB = 13
+INCLINATION_DEGREE = 98.98
 
 # General files needed to generate visualizations; Do not change for different simulations
 topFile = "../static_html/top.html"
 bottomFile = "../static_html/bottom.html"
-city_detail_file = "../../paper/satellite_networks_state/input_data/ground_stations_cities_sorted_by_estimated_2025_pop_top_1000.basic.txt"
+city_detail_file = "../../paper/satellite_networks_state/input_data/ground_stations_cities_sorted_by_estimated_2025_pop_top_100.basic.txt"
 
 # Time in ms for which visualization will be generated
 GEN_TIME=10000  #ms
@@ -89,8 +107,8 @@ GEN_TIME=10000  #ms
 # City IDs are available in the city_detail_file.
 # If city ID is X (for Paris X = 24) and constellation is Starlink_550 (1584 satellites),
 # then offset ID is 1584 + 24 = 1608.
-path_file = "../../paper/satgenpy_analysis/data/kuiper_630_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls/100ms_for_200s/manual/data/networkx_path_1193_to_1243.txt"
-IN_UTIL_FILE = "../../paper/ns3_experiments/traffic_matrix/runs/run_general_tm_pairing_kuiper_isls_moving/logs_ns3/isl_utilization.csv"
+path_file = "../../papier2/satgenpy_analysis/data/telesat_1015_isls_plus_grid_ground_stations_top_100_algorithm_free_one_only_over_isls2/2000ms_for_60s/manual/data/networkx_path_370_to_409.txt"
+IN_UTIL_FILE = "../../papier2/ns3_experiments/traffic_matrix_load/runs/run_loaded_tm_pairing_5_Mbps_for_60s_with_tcp_algorithm_free_one_only_over_isls2/logs_ns3/isl_utilization.csv"
 
 # Output directory for creating visualization html files
 OUT_DIR = "../viz_output/"
@@ -153,6 +171,7 @@ def generate_utilization_at_time():
     shifted_epoch = (pd.to_datetime(EPOCH) + pd.to_timedelta(GEN_TIME, unit='ms')).strftime(format='%Y/%m/%d %H:%M:%S.%f')
     print(shifted_epoch)
 
+    #points noirs pour tous les satellites
     for i in range(len(sat_objs)):
         sat_objs[i]["sat_obj"].compute(shifted_epoch)
         viz_string += "var redSphere = viewer.entities.add({name : '', position: Cesium.Cartesian3.fromDegrees(" \
@@ -161,6 +180,7 @@ def generate_utilization_at_time():
                      + "ellipsoid : {radii : new Cesium.Cartesian3(20000.0, 20000.0, 20000.0), "\
                      + "material : Cesium.Color.BLACK.withAlpha(1),}});\n"
 
+    #orbites des satellites en gris
     orbit_links = util.find_orbit_links(sat_objs, NUM_ORBS, NUM_SATS_PER_ORB)
     for key in orbit_links:
         sat1 = orbit_links[key]["sat1"]
@@ -175,6 +195,7 @@ def generate_utilization_at_time():
                       + "width: 0.1, arcType: Cesium.ArcType.NONE, " \
                       + "material: new Cesium.PolylineOutlineMaterialProperty({ " \
                       + "color: Cesium.Color.GREY.withAlpha(0.2), outlineWidth: 0, outlineColor: Cesium.Color.BLACK})}});"
+    
     for p in range(len(SEL_PATH)):
         if p == 0 or p == len(SEL_PATH) - 1:
             GS = int(SEL_PATH[p]) - NUM_ORBS*NUM_SATS_PER_ORB
@@ -210,7 +231,7 @@ def generate_utilization_at_time():
                           + "color: Cesium.Color.fromCssColorString('#" + str(
                 hex_col) + "'), outlineWidth: 0, outlineColor: Cesium.Color.BLACK})}});"
 
-    OUT_HTML_FILE += "_" + str(GEN_TIME) + ".html"
+    OUT_HTML_FILE += "_" + str(GEN_TIME) + "_isls2.html"
     return viz_string
 
 

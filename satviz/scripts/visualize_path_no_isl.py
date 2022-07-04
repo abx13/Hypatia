@@ -60,7 +60,10 @@ INCLINATION_DEGREE = 53
 """
 
 # KUIPER 630
-NAME = "kuiper_630"
+#NAME = "kuiper_630"
+
+# TELESAT 1015
+NAME = "telesat_1015"
 
 ################################################################
 # The below constants are taken from Kuiper's FCC filing as below:
@@ -90,7 +93,7 @@ GEN_TIME = 158300 #116000  # ms
 # City IDs are available in the city_detail_file.
 # If city ID is X (for Paris X = 24) and constellation is Starlink_550 (1584 satellites),
 # then offset ID is 1584 + 24 = 1608.
-path_file = "../../paper/satgenpy_analysis/data/kuiper_630_isls_none_ground_stations_paris_moscow_grid_algorithm_free_one_only_gs_relays/100ms_for_200s/manual/data/networkx_path_1156_to_1232.txt"
+path_file = "../../paper/satgenpy_analysis/data/telesat_1015_isls_plus_grid__ground_stations_top_100_algorithm_free_only_over_isls/5000ms_for_20s/manual/data/networkx_path_363_to_381.txt"
 
 # Output directory for creating visualization html files
 OUT_DIR = "../viz_output/"

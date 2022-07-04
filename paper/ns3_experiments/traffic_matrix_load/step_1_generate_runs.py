@@ -33,9 +33,10 @@ local_shell.remove_force_recursive("data")
 
 # Schedule
 #to get back to old code , put following lines at "schedule was here !!"
-random.seed(123456789)
+random.seed(11)
 random.randint(0, 100000000)  # Legacy reasons
 seed_from_to = random.randint(0, 100000000)
+
 a = set(range(1156, 1256))
 list_from_to = networkload.generate_from_to_reciprocated_random_pairing(list(a), seed_from_to)
 list_proportion=[random.choice(range(70,130))/100 for _ in range(len(list_from_to))]

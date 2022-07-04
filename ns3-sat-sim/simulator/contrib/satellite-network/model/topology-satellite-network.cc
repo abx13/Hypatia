@@ -456,22 +456,22 @@ namespace ns3 {
                 for (size_t j = 0; j < utilization.size(); j++) {
 
                     // Only write if it is the last one, or if the utilization is different from the next
-                    if (j == utilization.size() - 1 || utilization[j] != utilization[j + 1]) {
+                    //if (j == utilization.size() - 1 || utilization[j] != utilization[j + 1]) {
 
                         // Write plain to the CSV file:
                         // <src>,<dst>,<interval start (ns)>,<interval end (ns)>,<utilization 0.0-1.0>
-                        fprintf(file_utilization_csv,
-                                "%d,%d,%" PRId64 ",%" PRId64 ",%f\n",
-                                src_dst.first,
-                                src_dst.second,
-                                interval_left_side_ns,
-                                (j + 1) * m_isl_utilization_tracking_interval_ns,
-                                utilization[j]
-                        );
+                    fprintf(file_utilization_csv,
+                            "%d,%d,%" PRId64 ",%" PRId64 ",%f\n",
+                            src_dst.first,
+                            src_dst.second,
+                            interval_left_side_ns,
+                            (j + 1) * m_isl_utilization_tracking_interval_ns,
+                            utilization[j]
+                       );
 
-                        interval_left_side_ns = (j + 1) * m_isl_utilization_tracking_interval_ns;
+                    interval_left_side_ns = (j + 1) * m_isl_utilization_tracking_interval_ns;
 
-                    }
+                    //}
                 }
             }
 

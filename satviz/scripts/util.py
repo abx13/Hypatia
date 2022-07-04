@@ -173,7 +173,7 @@ def find_grid_links(sat_positions, num_orbit, num_sats_per_orbit):
         }
         cntr += 1
         sel_sat_id = get_neighbor_satellite(sat_positions[i]["orb_id"], sat_positions[i]["orb_sat_id"],
-                                                 1, 0, sat_positions,
+                                                 1, -1, sat_positions,
                                                  num_orbit, num_sats_per_orbit)
         grid_links[cntr] = {
             "sat1": i,

@@ -72,7 +72,7 @@ NUM_ORBS = 72
 NUM_SATS_PER_ORB = 22
 INCLINATION_DEGREE = 53
 """
-
+"""
 # KUIPER 630
 NAME = "kuiper_630"
 
@@ -89,7 +89,7 @@ MAX_ISL_LENGTH_M = 2 * math.sqrt(math.pow(EARTH_RADIUS + ALTITUDE_M, 2) - math.p
 NUM_ORBS = 34
 NUM_SATS_PER_ORB = 34
 INCLINATION_DEGREE = 51.9
-
+"""
 
 # TELESAT 1015
 NAME = "telesat_1015"

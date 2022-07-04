@@ -37,18 +37,16 @@
 
 ##########################################
 
-
-liste_arguments=("main_telesat_1015.py 60 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
-		"main_telesat_1015.py 60 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4")
+liste_arguments=("main_telesat_1015.py 4 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4" \
+				 "main_telesat_1015.py 4 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" )
 
 #with default ~1Mb/s x 100 commodities,
 #2Mb/s ISL throughput => strong overload in UDP
 #4Mb/s ISL throughput => overload in shortest path
 #10Mb/s ISL throughput => network oversized, no overload
-
 #values in Mb/s
-liste_debitISL=("5" \
-				"5" )
+liste_debitISL=("5" "5")
+#liste_debitISL=("2" "5")
 
 if (( ${#liste_debitISL[@]} != ${#liste_arguments[@]} )); then
 	echo liste_debitISL ${#liste_debitISL[@]} and liste_arguments ${#liste_arguments[@]} must have the same size
@@ -75,34 +73,33 @@ for ((i=0; i<${#liste_arguments[@]}; ++i )) ; do
 	cd satgenpy_analysis || exit 1
 	python perform_full_analysis.py ${arguments[*]} || exit 1
 	cd .. || exit 1
+	
 
-	# NS-3 EXPERIMENTS
-	cd ns3_experiments || exit 1
-	cd traffic_matrix_load || exit 1
-	python step_2_run.py 0 $debitISL ${arguments[1]} ${arguments[5]} || exit 1
-	cd ..
-	cd .. || exit 1
-
+	
+	srcdir=$(ls -R satgenpy_analysis | grep ${arguments[5]}/ | grep "${arguments[2]}ms_for_${arguments[1]}s": | cut -d ':' -f 1)
+	destdir="sauvegardes/chemins_$(date +'%F-%H%M')_${debitISL}_${arguments[5]}"
+	mkdir $destdir
+	cp -R -t $destdir $srcdir
+	
 	unset debitISL
 	unset arguments
 done;
 
-# global simulation plots
-# not very interesting for network, 
-# but gives an overview of simulation performance (goodput_rate vs slowdown and goodput vs runtime)
-# results in hypatia/papier2/ns3_experiments/traffic_matrix_load/pdf
-cd ns3_experiments || exit 1
-cd traffic_matrix_load || exit 1
-# python step_3_generate_plots.py || exit 1
+
+#comparaison des fichiers de chemins
+selects=$(ls sauvegardes | grep chemins)
+communs=$(cut -d '_' -f 3,4,5,6,7 <<< $selects | sort | uniq)
+fics=$(find sauvegardes -name 'networkx_path*.txt' | cut -d '/' -f 3,4,5,6 | sort | uniq)
+rm testdiff*
+for paramdebit in ${communs[@]}; do	
+	ensemble=$(find sauvegardes -name 'networkx_path*.txt' | grep $paramdebit)
+	for fic in ${fics[@]}; do
+		a_comparer=$(grep $fic <<< $ensemble)
+		diff -q $a_comparer >> testdiff_$(date +'%F-%H%M')_$paramdebit
+	done
+	echo pour $paramdebit, $(wc -l < testdiff_$(date +'%F-%H%M')_$paramdebit) commodites sont différentes
+done
 
 
-# below scripts help to analyse simulation results. 
-echo " "
-echo " run logs analysis "
-# python runs_logs.py #run when logs option is enabled in ns3 .properties files
-#echo " run ping analysis "
-#python runs_mesh.py #run when mesh option is enabled in ns3 .properties (see hypatia/paper/ns3_simulation/a_b example. look for "pingmesh" in step1_generate_runs.py and template files)
-echo "final results"
-python runs_results.py #total results. Determine which is the best algo at a glance
-cd ..
-cd .. || exit 1
+
+

@@ -61,8 +61,25 @@ list_from_to = networkload.generate_from_to_reciprocated_random_pairing(list(a),
 #setting up commodities
 reference_rate = 1 # target sending rate in Mb/s
 list_proportion  =[random.choice(range(70,130))/100 for _ in range(len(list_from_to))]
-tcp_list_flow_size_byte=[int(elt*reference_rate*int(params[1])*(1e6/8)) for elt in list_proportion]#tcp : sending rate * randomization * simu_duration * coeff_Mb_to_bytes
+#list_proportion  = [1 for _ in range(len(list_from_to))]
+tcp_list_flow_size_byte=[int(elt*2*reference_rate*int(params[1])*(1e6/8)) for elt in list_proportion]#tcp : randomization * sending rate  * simu_duration * coeff_Mb_to_bytes
+#tcp_list_flow_size_byte=[int(reference_rate*int(params[1])*(1e6/8))]#tcp : sending rate  * simu_duration * coeff_Mb_to_bytes
 udp_list_flow_size_proportion=[elt*reference_rate for elt in list_proportion]#udp : sending rate * randomization, in Mb/s
+
+#setting up different start times
+start_time_div = 30     #parameter to change
+list_start_time = []
+for _ in range(int(len(list_from_to)/start_time_div)):
+    list_start_time.append(0)
+
+for i in range(1, start_time_div):
+    for _ in range(int(len(list_from_to)/start_time_div*(i-1)), int(len(list_from_to)/start_time_div*i)):
+        list_start_time.append( i )
+
+if(len(list_start_time) != len(list_from_to)):
+    for _ in range (len(list_start_time), len(list_from_to)):
+        list_start_time.append(list_start_time[-1])
+
 
 
 for config in [
@@ -92,7 +109,7 @@ for config in [
     duration_s = config[1]
 
     # Both protocols
-    for protocol_chosen in ["tcp", "udp"]:
+    for protocol_chosen in ["tcp"]:
 
         # TCP NewReno needs at least the BDP in queue size to fulfill bandwidth
         if protocol_chosen == "tcp":
@@ -163,7 +180,7 @@ for config in [
                 len(list_from_to),
                 list_from_to,
                 tcp_list_flow_size_byte,
-                [0] * len(list_from_to)
+                list_start_time
             )
 
         # udp_burst_schedule.csv
