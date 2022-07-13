@@ -86,22 +86,6 @@ for config in [
     # Rate in Mbit/s, duration in seconds, ISL network device queue size pkt for TCP, GSL network device queue size pkt for TCP
     # (UDP queue size is capped at 100)
     (debitISL, int(params[1]), 10*debitISL, 10*debitISL),
-    #(1.0, 20, 10, 10),
-    #(1.0, 50, 10, 10),
-    #(10.0, 10, 100, 100),
-    #(10.0, 20, 100, 100),
-    #(10.0, 50, 100, 100),
-    #(25.0, 10, 250, 250),
-    #(25.0, 20, 250, 250),
-    #(25.0, 50, 250, 250),
-    #(100.0, 10, 1000, 1000),
-    #(100.0, 20, 1000, 1000),
-    #(250.0, 10, 2500, 2500),
-    #(250.0, 20, 2500, 2500),
-    #(1000.0, 10, 10000, 10000),
-    #(2500.0, 10, 25000, 25000),
-    #(10000.0, 1, 100000, 100000),
-    #(10000.0, 2, 100000, 100000),
 ]:
 
     # Retrieve values from the config

@@ -6,8 +6,8 @@ import math
 #------------------------------------#
 #        PARAMETRES A CHANGER        #
 #------------------------------------#
-mbps = 5
-tps_simu = 60
+mbps = 10
+tps_simu = 20
 
 dim_row = 4
 dim_columns = 5
