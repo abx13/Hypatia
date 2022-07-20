@@ -306,7 +306,7 @@ def calculate_fstate_shortest_path_without_gs_relaying3(
         # Among the satellites in range of the destination ground station,
         # find the one which promises the shortest distance
         possibilities = list(sorted(ground_station_satellites_in_range_candidates[gs_id]))
-        #end station must connect to the nearest satellite
+
         if len(possibilities) > 0:
             dist_satellite_to_ground_station[dst_gs_node_id]=[]
             for i in range(3) :
@@ -385,22 +385,23 @@ def calculate_fstate_shortest_path_without_gs_relaying3(
             for dst_gid in range(num_ground_stations):
                 dst_gs_node_id = num_satellites + dst_gid
                 find_good = False
+                curr_src = False
                 for src_gid in [x for x in range(num_ground_stations) if x != dst_gid] :
                     src_gs_node_id = num_satellites + src_gid 
                     src_sat = src_to_dst[(src_gs_node_id, dst_gs_node_id)][0]
                     dst_sat = src_to_dst[(src_gs_node_id, dst_gs_node_id)][1]
 
-                    if curr == dst_sat and find_good == False: 
+                    if curr == dst_sat and find_good == False : 
                         # This is the destination satellite, as such the next hop is the ground station itself
                         next_hop_decision = (
                             dst_gs_node_id,
                             num_isls_per_sat[dst_sat] + gid_to_sat_gsl_if_idx[dst_gid],
                             0
                         )
-                        find_good = True
-                        break 
+                        find_good = True  
 
-                    elif curr == src_sat and find_good == False:
+                    elif curr == src_sat and find_good == False and curr_src == False:
+                        curr_src = True    
                         best_distance_m = 1000000000000000
                         for neighbor_id in sat_net_graph_only_satellites_with_isls.neighbors(curr):
                             distance_m = (
@@ -417,36 +418,34 @@ def calculate_fstate_shortest_path_without_gs_relaying3(
                                 best_distance_m = distance_m
 
                     # If the current node is not that satellite, determine how to get to the satellite
-                    else :
+                    elif src_sat != dst_sat and find_good == False and curr_src == False :
                         neighbor_find = False
-                        for i in range(len(dist_satellite_to_ground_station[dst_gs_node_id])) :
                             #case 1 satellite - direct neighbor
-                            if curr in sat_net_graph_only_satellites_with_isls.neighbors(dist_satellite_to_ground_station[dst_gs_node_id][i][0]): 
-                                neighbor_id = dist_satellite_to_ground_station[dst_gs_node_id][i][0]
-                                next_hop_decision = (
-                                    neighbor_id,
-                                    sat_neighbor_to_if[(curr, neighbor_id)],
-                                    sat_neighbor_to_if[(neighbor_id, curr)]
-                                ) 
-                                neighbor_find = True
+                        if curr in sat_net_graph_only_satellites_with_isls.neighbors(dst_sat): 
+                            neighbor_id = dst_sat
+                            next_hop_decision = (
+                                neighbor_id,
+                                sat_neighbor_to_if[(curr, neighbor_id)],
+                                sat_neighbor_to_if[(neighbor_id, curr)]
+                            ) 
+                            neighbor_find = True
 
-                            #original case
-                            elif neighbor_find == False : 
-                                best_distance_m = 1000000000000000
-                                for neighbor_id in sat_net_graph_only_satellites_with_isls.neighbors(curr):
-                                    distance_m = (
-                                            sat_net_graph_only_satellites_with_isls.edges[(curr, neighbor_id)]["weight"]
-                                            +
-                                            dist_sat_net_without_gs[(neighbor_id, dst_sat)]
+                        #original case
+                        elif neighbor_find == False : 
+                            best_distance_m = 1000000000000000
+                            for neighbor_id in sat_net_graph_only_satellites_with_isls.neighbors(curr):
+                                distance_m = (
+                                        sat_net_graph_only_satellites_with_isls.edges[(curr, neighbor_id)]["weight"]
+                                        +
+                                        dist_sat_net_without_gs[(neighbor_id, dst_sat)]
+                                )
+                                if distance_m < best_distance_m:
+                                    next_hop_decision = (
+                                        neighbor_id,
+                                        sat_neighbor_to_if[(curr, neighbor_id)],
+                                        sat_neighbor_to_if[(neighbor_id, curr)]
                                     )
-                                    if distance_m < best_distance_m:
-                                        next_hop_decision = (
-                                            neighbor_id,
-                                            sat_neighbor_to_if[(curr, neighbor_id)],
-                                            sat_neighbor_to_if[(neighbor_id, curr)]
-                                        )
-                                        best_distance_m = distance_m
-
+                                    best_distance_m = distance_m
                 # Write to forwarding state
                 if not prev_fstate or prev_fstate[(curr, dst_gs_node_id)] != next_hop_decision:
                     f_out.write("%d,%d,%d,%d,%d\n" % (

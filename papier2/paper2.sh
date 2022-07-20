@@ -39,8 +39,8 @@
 
 
 liste_arguments=("main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
-				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4" \
-				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls3 4")				
+				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4"
+				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls3 4")			
 
 
 #with default ~1Mb/s x 100 commodities,
@@ -49,8 +49,8 @@ liste_arguments=("main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_to
 #10Mb/s ISL throughput => network oversized, no overload
 
 #values in Mb/s - change to have more or less ISL throughput
-liste_debitISL=("10" \
-				"10" \
+liste_debitISL=("10"\
+				"10"\
 				"10")
 
 if (( ${#liste_debitISL[@]} != ${#liste_arguments[@]} )); then
@@ -102,10 +102,10 @@ cd traffic_matrix_load || exit 1
 # below scripts help to analyse simulation results. 
 echo " "
 echo " run logs analysis "
-python runs_logs.py #run when logs option is enabled in ns3 .properties files
+python runs_logs4.py #run when logs option is enabled in ns3 .properties files
 #echo " run ping analysis "
 #python runs_mesh.py #run when mesh option is enabled in ns3 .properties (see hypatia/paper/ns3_simulation/a_b example. look for "pingmesh" in step1_generate_runs.py and template files)
-echo "final results"
-python runs_results.py #total results. Determine which is the best algo at a glance
+#echo "final results"
+#python runs_results.py #total results. Determine which is the best algo at a glance
 cd ..
 cd .. || exit 1

@@ -57,7 +57,7 @@ def algorithm_free_one_only_over_isls3(
     """
 
     if enable_verbose_logs:
-        print("\nALGORITHM: FREE ONE ONLY OVER ISLS")
+        print("\nALGORITHM: FREE ONE ONLY OVER ISLS 3")
 
     # Check the graph
     if sat_net_graph_only_satellites_with_isls.number_of_nodes() != len(satellites):

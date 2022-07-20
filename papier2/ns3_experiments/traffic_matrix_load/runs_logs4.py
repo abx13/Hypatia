@@ -17,7 +17,6 @@ fig,axes=plt.subplots(3,1, figsize=(16,9), dpi=80, facecolor="w", edgecolor='k')
 label=['Shortest Path', 'MCNF', 'Optimized Path']
 i=0
 for doss in dossiers:
-	print(doss)
 	fics=sorted([fic for fic in os.listdir(doss+interdoss) if os.path.isfile(doss+interdoss+fic) and "tcp_flow_" in fic])
 	if fics:
 		print(doss)

@@ -51,11 +51,13 @@ def read_flows_file(file):
 
 
     
-with open("runs/run_loaded_tm_pairing_5_Mbps_for_120s_with_tcp_algorithm_free_one_only_over_isls/logs_ns3/tcp_flows.csv", "r") as f_tcp_flows, \
-     open("runs/run_loaded_tm_pairing_5_Mbps_for_120s_with_tcp_algorithm_free_one_only_over_isls2/logs_ns3/tcp_flows.csv", "r") as f_tcp_flows2:
+with open("runs/run_loaded_tm_pairing_10_Mbps_for_20s_with_tcp_algorithm_free_one_only_over_isls/logs_ns3/tcp_flows.csv", "r") as f_tcp_flows, \
+     open("runs/run_loaded_tm_pairing_10_Mbps_for_20s_with_tcp_algorithm_free_one_only_over_isls2/logs_ns3/tcp_flows.csv", "r") as f_tcp_flows2, \
+     open("runs/run_loaded_tm_pairing_10_Mbps_for_20s_with_tcp_algorithm_free_one_only_over_isls3/logs_ns3/tcp_flows.csv", "r") as f_tcp_flows3:
 
     tab_flows1 = read_flows_file(f_tcp_flows)
     tab_flows2 = read_flows_file(f_tcp_flows2)
+    tab_flows3 = read_flows_file(f_tcp_flows3)
     
     print("length")
     print(len(tab_flows1))
@@ -69,15 +71,20 @@ with open("runs/run_loaded_tm_pairing_5_Mbps_for_120s_with_tcp_algorithm_free_on
      #       print(tab_flows2[i][0])
     print(list(zip(*tab_flows2))[0])
 
+    print("ISLS 3 - AVG Rate")
+    #for i in range (len(tab_flows2)):        
+     #       print(tab_flows2[i][0])
+    print(list(zip(*tab_flows3))[0])
     
    
-    width = 0.35      
+    width = 0.25      
     print(len(list(zip(*tab_flows1))[0]))   
     x = np.arange(len(list(zip(*tab_flows1))[0]))
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    b1 = ax.bar(x-width/2, height=list(zip(*tab_flows1))[0], width=width, label='Shortest Path', align="center")
-    b2 = ax.bar(x+width/2, height=list(zip(*tab_flows2))[0], width=width, label='MCNF',align="center")
+    b1 = ax.bar(x-width, height=list(zip(*tab_flows1))[0], width=width, label='Shortest Path', align="center")
+    b2 = ax.bar(x, height=list(zip(*tab_flows2))[0], width=width, label='MCNF',align="center")
+    b3 = ax.bar(x+width, height=list(zip(*tab_flows3))[0], width=width, label='Optimized',align="center")
 
     fig.suptitle("Histogram - Simulation "+str(mbps)+" Mps "+str(tps_simu)+" s")
     #plt.xticks(x, util_fractions)

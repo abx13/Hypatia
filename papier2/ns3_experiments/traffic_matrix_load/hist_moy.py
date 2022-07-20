@@ -70,19 +70,19 @@ def read_util_file(file):
             print(util)
             print(id_ut)
         #counting the number of occurrencies of the same utilization rate by timestep (2s)
-        if (start_time >= 0 and start_time < 30):
+        if (start_time >= 0 and start_time < int(tps_simu/4)):
             tab_hist_util[0][id_ut] += 1
             if(i==0 or i==1 or i==2):
                 print(tab_hist_util[0][id_ut])
-        elif(start_time >= 30 and start_time < 60):
+        elif(start_time >= int(tps_simu/4) and start_time < int(tps_simu/4)*2):
             tab_hist_util[1][id_ut] += 1
             if(i==0 or i==1 or i==2):
                 print(tab_hist_util[0][id_ut])
-        elif(start_time >= 60 and start_time < 90):
+        elif(start_time >= int(tps_simu/4)*2 and start_time < int(tps_simu/4)*3):
             tab_hist_util[2][id_ut] += 1
             if(i==0 or i==1 or i==2):
                 print(tab_hist_util[0][id_ut])
-        elif(start_time >= 90 and start_time < 120):
+        elif(start_time >= int(tps_simu/4)*3 and start_time < int(tps_simu)):
             tab_hist_util[3][id_ut] += 1
             if(i==0 or i==1 or i==2):
                 print(tab_hist_util[0][id_ut])
@@ -97,12 +97,13 @@ print(int(tps_simu/4)*2)
 print(int(tps_simu/4)*3)
 print(int(tps_simu))
     
-with open("runs/run_loaded_tm_pairing_"+str(mbps)+"_Mbps_for_"+str(tps_simu)+"s_with_tcp_algorithm_free_one_only_over_isls/logs_ns3/isl_utilization_"+str(mbps)+"_"+str(tps_simu)+"_isls.csv", "r") as f_isl_util, \
-     open("runs/run_loaded_tm_pairing_"+str(mbps)+"_Mbps_for_"+str(tps_simu)+"s_with_tcp_algorithm_free_one_only_over_isls2/logs_ns3/isl_utilization_"+str(mbps)+"_"+str(tps_simu)+"_isls2.csv", "r") as f_isl_util2:
+with open("runs/run_loaded_tm_pairing_"+str(mbps)+"_Mbps_for_"+str(tps_simu)+"s_with_tcp_algorithm_free_one_only_over_isls/logs_ns3/isl_utilization.csv", "r") as f_isl_util, \
+     open("runs/run_loaded_tm_pairing_"+str(mbps)+"_Mbps_for_"+str(tps_simu)+"s_with_tcp_algorithm_free_one_only_over_isls2/logs_ns3/isl_utilization.csv", "r") as f_isl_util2, \
+     open("runs/run_loaded_tm_pairing_"+str(mbps)+"_Mbps_for_"+str(tps_simu)+"s_with_tcp_algorithm_free_one_only_over_isls3/logs_ns3/isl_utilization.csv", "r") as f_isl_util3:
 
     tab_util1 = read_util_file(f_isl_util)
     tab_util2 = read_util_file(f_isl_util2)
-
+    tab_util3 = read_util_file(f_isl_util3)
 
     print("ISLS - Utilization")
     for i in range (dim_row):
@@ -112,13 +113,18 @@ with open("runs/run_loaded_tm_pairing_"+str(mbps)+"_Mbps_for_"+str(tps_simu)+"s_
     for i in range (dim_row):        
             print(tab_util2[i])
 
+    print("ISLS 3 - Utilization")
+    for i in range (dim_row):        
+            print(tab_util3[i])
+
     for i in range (dim_row): 
-        width = 0.35 
+        width = 0.25 
         x = np.arange(len(util_fractions))
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        b1 = ax.bar(x-width/2, height=tab_util1[i], width=width, label='Shortest Path', align="center")
-        b2 = ax.bar(x+width/2, height=tab_util2[i], width=width, label='MCNF',align="center")
+        b1 = ax.bar(x-width, height=tab_util1[i], width=width, label='Shortest Path', align="center")
+        b2 = ax.bar(x, height=tab_util2[i], width=width, label='MCNF',align="center")
+        b3 = ax.bar(x+width, height=tab_util3[i], width=width, label='Optimized',align="center")
 
         fig.suptitle("Histogram - Simulation "+str(mbps)+" Mps "+str(tps_simu)+" s - from "+str(time_fractions[i][0])+"s to "+str(time_fractions[i][1])+"s")
         plt.xticks(x, util_fractions)
