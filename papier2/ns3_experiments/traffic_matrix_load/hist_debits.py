@@ -2,6 +2,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 import math
+import statistics
 
 #------------------------------------#
 #        PARAMETRES A CHANGER        #
@@ -28,8 +29,6 @@ def get_max(list1, list2):
     print(max(list1))
     max_list1 = max(list1)
     max_list2 = max(list2)
-    print("MAX")
-    print(max(max_list1, max_list2))
     return max(max_list1, max_list2)
 
 
@@ -59,26 +58,18 @@ with open("runs/run_loaded_tm_pairing_10_Mbps_for_20s_with_tcp_algorithm_free_on
     tab_flows2 = read_flows_file(f_tcp_flows2)
     tab_flows3 = read_flows_file(f_tcp_flows3)
     
-    print("length")
-    print(len(tab_flows1))
-    print("ISLS - AVG Rate")
-    #for i in range (len(tab_flows1)):
-     #       print(tab_flows1[i][0])
-    print(list(zip(*tab_flows1))[0])
 
-    print("ISLS 2 - AVG Rate")
-    #for i in range (len(tab_flows2)):        
-     #       print(tab_flows2[i][0])
-    print(list(zip(*tab_flows2))[0])
+    print('Average Rate - mean of all flows - ISLS')
+    print(statistics.fmean(list(zip(*tab_flows1))[0]))
 
-    print("ISLS 3 - AVG Rate")
-    #for i in range (len(tab_flows2)):        
-     #       print(tab_flows2[i][0])
-    print(list(zip(*tab_flows3))[0])
+    print('Average Rate - mean of all flows - ISLS2')
+    print(statistics.fmean(list(zip(*tab_flows2))[0]))
+
+    print('Average Rate - mean of all flows - ISLS3')
+    print(statistics.fmean(list(zip(*tab_flows3))[0]))
     
    
-    width = 0.25      
-    print(len(list(zip(*tab_flows1))[0]))   
+    width = 0.25        
     x = np.arange(len(list(zip(*tab_flows1))[0]))
     fig = plt.figure()
     ax = fig.add_subplot(111)
