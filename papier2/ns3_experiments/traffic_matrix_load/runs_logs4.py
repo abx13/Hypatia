@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 
 interdoss="/logs_ns3/"#tcp_flow"[id]_{progress, cwnd, rtt}.csv`
-dossiers=sorted([runsdoss for doss in os.listdir("runs") if os.path.isdir(runsdoss:="runs/"+doss) and '20s' in doss and '10' in doss])
+dossiers=sorted([runsdoss for doss in os.listdir("runs") if os.path.isdir(runsdoss:="runs/"+doss) and '120s' in doss and '10' in doss])
 
 colours=['g','b', 'r']
 fig,axes=plt.subplots(3,1, figsize=(16,9), dpi=80, facecolor="w", edgecolor='k')

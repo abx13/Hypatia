@@ -1,5 +1,5 @@
 #generates a file with commodities and cities
-with open("ground_stations_cities_sorted_by_estimated_2025_pop_top_100.basic.txt", "r") as f:
+with open("ground_stations_cities_sorted_by_estimated_2025_pop_top_200.basic.txt", "r") as f:
 	villes=f.readlines()
 
 with open("../commodites.temp") as f:

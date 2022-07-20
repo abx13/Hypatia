@@ -47,7 +47,7 @@ def get_max(list1, list2):
 #        PARAMETRES A CHANGER        #
 #------------------------------------#
 mbps = 10
-tps_simu = 20
+tps_simu = 120
 
 dim_row = 4
 dim_columns = 5
