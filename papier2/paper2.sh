@@ -38,14 +38,14 @@
 ##########################################
 
 
-liste_arguments=("main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
-				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4" \
-				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls3 4" \
-				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls4 4" \
-				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls5 4" \
-				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls6 4")		
+#liste_arguments=("main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
+#				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4" \
+#				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls3 4" \
+#				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls4 4" \
+#				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls5 4" \
+#				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls6 4")		
 
-#liste_arguments=("main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls4 4")
+liste_arguments=("main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls5 4")
 
 #with default ~1Mb/s x 100 commodities,
 #2Mb/s ISL throughput => strong overload in UDP
@@ -53,14 +53,14 @@ liste_arguments=("main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_to
 #10Mb/s ISL throughput => network oversized, no overload
 
 #values in Mb/s - change to have more or less ISL throughput
-liste_debitISL=("10" \
-				"10" \
-				"10" \
-				"10" \
-				"10" \
-				"10")
+#liste_debitISL=("10" \
+#				"10" \
+#				"10" \
+#				"10" \
+#				"10" \
+#				"10")
 
-#liste_debitISL=("10")
+liste_debitISL=("10")
 
 if (( ${#liste_debitISL[@]} != ${#liste_arguments[@]} )); then
 	echo liste_debitISL ${#liste_debitISL[@]} and liste_arguments ${#liste_arguments[@]} must have the same size
