@@ -8,7 +8,9 @@ import statistics
 #        PARAMETRES A CHANGER        #
 #------------------------------------#
 mbps = 10
-tps_simu = 120
+tps_simu = 20
+
+#------------------------------------#
 
 dim_row = 4
 dim_columns = 5
@@ -51,8 +53,8 @@ def read_flows_file(file):
 
     
 with open("runs/run_loaded_tm_pairing_"+str(mbps)+"_Mbps_for_"+str(tps_simu)+"s_with_tcp_algorithm_free_one_only_over_isls/logs_ns3/tcp_flows.csv", "r") as f_tcp_flows, \
-     open("runs/run_loaded_tm_pairing_"+str(mbps)+"_Mbps_for_"+str(tps_simu)+"_with_tcp_algorithm_free_one_only_over_isls2/logs_ns3/tcp_flows.csv", "r") as f_tcp_flows2, \
-     open("runs/run_loaded_tm_pairing_"+str(mbps)+"_Mbps_for_"+str(tps_simu)+"_with_tcp_algorithm_free_one_only_over_isls3/logs_ns3/tcp_flows.csv", "r") as f_tcp_flows3:
+     open("runs/run_loaded_tm_pairing_"+str(mbps)+"_Mbps_for_"+str(tps_simu)+"s_with_tcp_algorithm_free_one_only_over_isls2/logs_ns3/tcp_flows.csv", "r") as f_tcp_flows2, \
+     open("runs/run_loaded_tm_pairing_"+str(mbps)+"_Mbps_for_"+str(tps_simu)+"s_with_tcp_algorithm_free_one_only_over_isls3/logs_ns3/tcp_flows.csv", "r") as f_tcp_flows3:
 
     tab_flows1 = read_flows_file(f_tcp_flows)
     tab_flows2 = read_flows_file(f_tcp_flows2)

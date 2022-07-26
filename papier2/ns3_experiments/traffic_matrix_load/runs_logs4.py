@@ -10,11 +10,11 @@ import matplotlib.pyplot as plt
 
 
 interdoss="/logs_ns3/"#tcp_flow"[id]_{progress, cwnd, rtt}.csv`
-dossiers=sorted([runsdoss for doss in os.listdir("runs") if os.path.isdir(runsdoss:="runs/"+doss) and '120s' in doss and '10' in doss])
+dossiers=sorted([runsdoss for doss in os.listdir("runs") if os.path.isdir(runsdoss:="runs/"+doss) and '_20s' in doss and '10' in doss])
 
-colours=['g','b', 'r']
+colours=['g','b', 'r', 'k','m','c']
 fig,axes=plt.subplots(3,1, figsize=(16,9), dpi=80, facecolor="w", edgecolor='k')
-label=['Shortest Path', 'MCNF', 'Optimized Path']
+label=['Shortest Path','MCNF', 'Optimized Shortest (3)','Optimized MCNF (3)', 'Optimized Shortest (5)','Optimized MCNF (5)']
 i=0
 for doss in dossiers:
 	fics=sorted([fic for fic in os.listdir(doss+interdoss) if os.path.isfile(doss+interdoss+fic) and "tcp_flow_" in fic])
