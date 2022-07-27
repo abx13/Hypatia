@@ -38,12 +38,12 @@
 ##########################################
 
 
-liste_arguments=("main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
-				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4" \
-				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls3 4" \
-				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls4 4" \
-				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls5 4" \
-				"main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls6 4")		
+liste_arguments=("main_telesat_1015.py 120 10000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls 4" \
+				"main_telesat_1015.py 120 10000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls2 4" \
+				"main_telesat_1015.py 120 10000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls3 4" \
+				"main_telesat_1015.py 120 10000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls4 4" \
+				"main_telesat_1015.py 120 10000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls5 4" \
+				"main_telesat_1015.py 120 10000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls6 4")		
 
 #iste_arguments=("main_telesat_1015.py 20 2000 isls_plus_grid ground_stations_top_100 algorithm_free_one_only_over_isls5 4")
 
