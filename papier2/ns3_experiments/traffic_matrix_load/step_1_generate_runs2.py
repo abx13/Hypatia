@@ -97,7 +97,7 @@ for config in [
     duration_s = config[1]
 
     # Both protocols
-    for protocol_chosen in ["tcp"]:
+    for protocol_chosen in ["tcp", "udp"]:
 
         # TCP NewReno needs at least the BDP in queue size to fulfill bandwidth
         if protocol_chosen == "tcp":

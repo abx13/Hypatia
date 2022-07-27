@@ -36,7 +36,7 @@ with open("data/traffic_goodput_total_data_sent_vs_runtime.csv", "w+") \
      open("data/run_dirs.csv", "w+") \
      as f_out_run_dirs:
 
-	for protocol_chosen in ["tcp"]:
+	for protocol_chosen in ["tcp", "udp"]:
 		for run_dir_details in (run_dirs:=["runs/"+fic for fic in os.listdir("runs") if os.path.isdir("runs/"+fic) and protocol_chosen in fic]):
 			
 			run_dir = run_dir_details

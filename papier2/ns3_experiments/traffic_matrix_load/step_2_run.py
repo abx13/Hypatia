@@ -41,7 +41,7 @@ unique_id = 0
 data_rate_megabit_per_s = float(args[1])
 duration_s = float(args[2])
 
-for protocol_chosen in ["tcp"]:#["tcp", "udp"]:
+for protocol_chosen in ["tcp", "udp"]:#["tcp", "udp"]:
 
 	if (unique_id % num_machines) == workload_id:
 
