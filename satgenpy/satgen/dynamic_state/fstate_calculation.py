@@ -285,11 +285,6 @@ def calculate_fstate_shortest_path_without_gs_relaying3(
         if enable_verbose_logs:
             print("debit lien ISL:",debitISL,"Mb/s")
     
-    #Clear file satellites possibilities for ech GS : 
-    file = 'possibilities.txt'
-    with open(file,'w') as fpossibilities :
-        print("OK : file of possibilities test is empty") 
-    
     file = 'test-commodity.txt'
     with open(file,'w') as fdictcomm :
         print("OK : file of commodity test is empty")
@@ -336,10 +331,6 @@ def calculate_fstate_shortest_path_without_gs_relaying3(
                         distance_to_ground_station_m
                     )
                 )
-        #write in a file the 3 closest satellites for each GS :
-        file = 'possibilities.txt'
-        with open(file,'a') as fpossibilities :
-            fpossibilities.write("".join(str(dst_gs_node_id)+' '+str(item[0])+' '+str(item[1])+"\n" for item in dist_satellite_to_ground_station[dst_gs_node_id]))
     
     #Writing the fstate
     with open('src_to_dst.txt', "w+") as f_out:
@@ -621,10 +612,6 @@ def calculate_fstate_shortest_path_without_gs_relaying4(
                         distance_to_ground_station_m
                     )
                 )
-        #write in a file the 3 closest satellites for each GS :
-        file = 'possibilities.txt'
-        with open(file,'a') as fpossibilities :
-            fpossibilities.write("".join(str(dst_gs_node_id)+' '+str(item[0])+' '+str(item[1])+"\n" for item in dist_satellite_to_ground_station[dst_gs_node_id]))
     
     #Writing the fstate
     with open('src_to_dst.txt', "w+") as f_out:
@@ -832,7 +819,7 @@ def calculate_fstate_shortest_path_without_gs_relaying5(
             print("debit lien ISL:",debitISL,"Mb/s")
     
     #Clear file satellites possibilities for ech GS : 
-    file = 'possibilities.txt'
+    file = 'possibilities_5.txt'
     with open(file,'w') as fpossibilities :
         print("OK : file of possibilities test is empty") 
     
@@ -883,7 +870,7 @@ def calculate_fstate_shortest_path_without_gs_relaying5(
                     )
                 )
         #write in a file the 3 closest satellites for each GS :
-        file = 'possibilities.txt'
+        file = 'possibilities_5.txt'
         with open(file,'a') as fpossibilities :
             fpossibilities.write("".join(str(dst_gs_node_id)+' '+str(item[0])+' '+str(item[1])+"\n" for item in dist_satellite_to_ground_station[dst_gs_node_id]))
     
@@ -1121,6 +1108,16 @@ def calculate_fstate_shortest_path_without_gs_relaying6(
         is_last,
         version
 ):
+
+    #Clear file satellites possibilities for ech GS : 
+    file = 'possibilities_5.txt'
+    with open(file,'w') as fpossibilities :
+        print("OK : file of possibilities test is empty") 
+    
+    file = 'test-commodity.txt'
+    with open(file,'w') as fdictcomm :
+        print("OK : file of commodity test is empty")
+
     #get the commodity list
 
     with open("commodites.temp","r") as fcomm:
@@ -1168,7 +1165,7 @@ def calculate_fstate_shortest_path_without_gs_relaying6(
                     )
                 )
         #write in a file the 5 closest satellites for each GS :
-        file = 'possibilities.txt'
+        file = 'possibilities_5.txt'
         with open(file,'a') as fpossibilities :
             fpossibilities.write("".join(str(dst_gs_node_id)+' '+str(item[0])+' '+str(item[1])+"\n" for item in dist_satellite_to_ground_station[dst_gs_node_id]))
     
