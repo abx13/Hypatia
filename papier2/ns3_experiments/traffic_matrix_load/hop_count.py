@@ -9,24 +9,24 @@ import numpy as np
 import math
 
 #------------------------------------#
-#        PARAMETRES A CHANGER        #
+#        PARAMETERS TO MODIFY        #
 #------------------------------------#
 mbps = 10
-tps_simu = 20
-timestep_ms = 2000
+tps_simu = 120
+timestep_ms = 10000
 nb_cities = 100
-tab_isls = ["isls", "isls2", "isls3"]
-nb_algo_SP = 2
-nb_algo_MCNF = 2
+tab_isls = ["isls", "isls2", "isls3", "isls4", "isls5", "isls6"]
+nb_algo_SP = 3
+nb_algo_MCNF = 3
 constellation = "telesat_1015"
 
 #------------------------------------#
 
-#clear file
+#Clear file
 file = 'hop_count.txt'
-with open(file,'w') as fhopcount :
-    print("")
 
+
+#Function to count hops in paths
 def read_hop_file(file):
     path_at_0 = file.readlines()[0].strip().split(',')
     hop_count = path_at_0[1].split('-')
@@ -36,29 +36,26 @@ def read_hop_file(file):
 #####
 #EXECUTION
 
-#creating tabs
-#tab_init = [0 for i in range (nb_cities)]
-#tab_hopcount = [tab_init for i in range (len(tab_isls))]
+#Creating tabs
 tab_hopcount = []
 for _ in range(len(tab_isls)):
     tab_hopcount.append([])
 
-tab_init = [0 for i in range (nb_cities)]
-tab_reduc_SP = [tab_init for i in range (nb_algo_MCNF - 1)]
+tab_reduc_SP = []
+for _ in range(nb_algo_SP - 1):
+    tab_reduc_SP.append([])
 
-tab_init = [0 for i in range (nb_cities)]
-tab_reduc_MCNF = [tab_init for i in range (nb_algo_MCNF - 1)]
+tab_reduc_MCNF = []
+for _ in range(nb_algo_MCNF - 1):
+    tab_reduc_MCNF.append([])
 
 
-
+#Getting the correct files
 doss = "../../satgenpy_analysis/data/"
 interdoss1 = str(constellation)+"_isls_plus_grid_ground_stations_top_"+str(nb_cities)+"_algorithm_free_one_only_over_"
 interdoss2 = '/'+str(timestep_ms)+"ms_for_"+str(tps_simu)+"s/manual/data/"
-#getting all the folders from satgenpy_analysis/data/
-#net = sorted([runsdoss for networkx in os.listdir("../../"+doss) if os.path.isdir(runsdoss:= "../../"+doss) ])
 
-
-
+#Calculting hop counts
 for i in range (len(tab_isls)) :
     net = sorted(os.listdir(doss+interdoss1+tab_isls[i]+interdoss2))
     for networkx in net:
@@ -67,28 +64,43 @@ for i in range (len(tab_isls)) :
                 tab_hopcount[i].append(read_hop_file(f_hop_count))
                 
                 
-
+#Reduction rates
 for j in range (nb_cities) : 
-    tab_reduc_SP[0][j] = (tab_hopcount[2][j] - tab_hopcount[0][j]) / tab_hopcount[0][j]
-    tab_reduc_MCNF[0][j] = (tab_hopcount[1][j] - tab_hopcount[0][j]) / tab_hopcount[0][j]
+    tab_reduc_SP[0].append((tab_hopcount[2][j] - tab_hopcount[0][j]) / tab_hopcount[0][j])
+    tab_reduc_SP[1].append((tab_hopcount[4][j] - tab_hopcount[0][j]) / tab_hopcount[0][j])
+    tab_reduc_MCNF[0].append((tab_hopcount[3][j] - tab_hopcount[1][j]) / tab_hopcount[1][j])
+    tab_reduc_MCNF[1].append((tab_hopcount[5][j] - tab_hopcount[1][j]) / tab_hopcount[1][j])
 
-avg_reduc_SP = sum(tab_reduc_SP[0])/len(tab_reduc_SP[0])
-avg_reduc_MCNF = sum(tab_reduc_MCNF[0])/len(tab_reduc_MCNF[0])
+#Averages
+avg_reduc_SP3 = sum(tab_reduc_SP[0])/len(tab_reduc_SP[0])
+avg_reduc_SP5 = sum(tab_reduc_SP[1])/len(tab_reduc_SP[1])
+avg_reduc_MCNF3 = sum(tab_reduc_MCNF[0])/len(tab_reduc_MCNF[0])
+avg_reduc_MCNF5 = sum(tab_reduc_MCNF[1])/len(tab_reduc_MCNF[1])
 
 
-#write in a file the 3 closest satellites for each GS :
+#write in a file the results :
 file = 'hop_count.txt'
 with open(file,'a') as fhopcount :
-    fhopcount.write("".join("AVERAGE REDUCTION SP : "+ str(avg_reduc_SP)+"\n"))
-    #fhopcount.write("".join("AVERAGE REDUCTION MCNF : "+ str(avg_reduc_MCNF+"\n\n")))
+    fhopcount.write("".join("AVERAGE DIFFERENCE SP 3: {:.2f}%\n".format(avg_reduc_SP3*100)))
+    fhopcount.write("".join("AVERAGE DIFFERENCE SP 5 {:.2f}%\n".format(avg_reduc_SP5*100)))
+    fhopcount.write("".join("AVERAGE DIFFERENCE MCNF 3: {:.2f}%\n".format(avg_reduc_MCNF3*100)))
+    fhopcount.write("".join("AVERAGE DIFFERENCE MCNF 5: {:.2f}%\n\n".format(avg_reduc_MCNF5*100)))
 
-    fhopcount.write("".join("ID"+'\t'+"ISLS"+'\t'+"ISLS2"+'\t'+"ISLS3"+'\t'+"ReducISLS-ISLS3"+"\n"))
-    fhopcount.write("".join(str(i)+'\t'+str(tab_hopcount[0][i])+'\t\t'+str(tab_hopcount[1][i])+'\t\t'+str(tab_hopcount[2][i])+'\t\t'+str(tab_reduc_SP[0][i])+"\n" for i in range (nb_cities)))
+    fhopcount.write("".join("ID"+'\t'+"ISLS"+'\t'+"ISLS2"+'\t'+"ISLS3"+'\t'+"ISLS4"+'\t'+"ISLS5"+'\t'+"ISLS6"+'\t'+"ISLS3/ISLS"+'\t'+"ISLS5/ISLS"+'\t'+"ISLS4/ISLS2"+'\t'+"ISLS6/ISLS2"+"\n"))
+    #fhopcount.write("".join(str(j)+'\t'+str(tab_hopcount[0][j])+'\t\t'+str(tab_hopcount[1][j])+'\t\t'+str(tab_hopcount[2][j])+'\t\t'+str(tab_hopcount[3][j])+str(tab_hopcount[4][j])+str(tab_hopcount[5][j])+str(tab_reduc_SP[0][j])+'\t\t'+str(tab_reduc_SP[1][j])+'\t\t'+str(tab_reduc_MCNF[0][j])+'\t\t'+str(tab_reduc_MCNF[1][j])+"\n" for j in range (nb_cities)))
 
-    #fhopcount.write("".join("ID"+'\t'+"ISLS"+'\t'+"ISLS 2"+'\t'+" ISLS 3"+'\t'+"ISLS 4"+"Reduc ISLS-ISLS3"+'\t'+"Reduc ISLS2-ISLS4"+"\n"))
-    #fhopcount.write("".join(str(i)+'\t'+str(tab_hopcount[0][i])+'\t'+str(tab_hopcount[1][i])+'\t'+str(tab_hopcount[2][i])+'\t'+str(tab_hopcount[3][i])+str(tab_reduc_SP[0][i])+'\t'+str(tab_reduc_MCNF[1][i])+"\n" for i in range (nb_cities)))
+    fhopcount.write("".join(str(j)+'\t' \
+                    +str(tab_hopcount[0][j])+'\t\t' \
+                    +str(tab_hopcount[1][j])+'\t\t' \
+                    +str(tab_hopcount[2][j])+'\t\t' \
+                    +str(tab_hopcount[3][j])+'\t\t' \
+                    +str(tab_hopcount[4][j])+'\t\t' \
+                    +str(tab_hopcount[5][j])+'\t\t' \
+                    +"{:.2f}\t\t{:.2f}\t\t{:.2f}\t\t{:.2f}\n" \
+                    .format(tab_reduc_SP[0][j], tab_reduc_SP[1][j], tab_reduc_MCNF[0][j], tab_reduc_MCNF[1][j]) \
+                    for j in range (nb_cities)))
 
-
+print("Hop_Count Results written in file : hop_count.txt")
 
 
 
